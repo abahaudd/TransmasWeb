@@ -1,4 +1,4 @@
-{{-- Sticky site header: nav, auth-aware user menu. Catalog item appears for users with the catalog.add.view permission. --}}
+{{-- Sticky site header: nav, auth-aware user menu. --}}
 @php
     $navLinks = [
         ['label' => 'Home', 'href' => '/'],
@@ -13,7 +13,11 @@
         fn () => \App\Models\Setting::where('group', 'company')->where('name', 'details')->first()?->payload ?? []
     );
 
-    $companyName = (string) ($companyDetails['name'] ?? config('app.name', 'Company'));
+    $companySettings = app(\App\Settings\CompanySettings::class);
+    $generalSettings = app(\App\Settings\GeneralSettings::class);
+    $companyLogoUrl = $companySettings->logoUrl() ?: asset('images/logo.png');
+
+    $companyName = (string) ($generalSettings->site_name ?? config('app.name', 'Company'));
     $companySubtitle = (string) ($companyDetails['tagline'] ?? 'Business Solutions');
 
     $user = auth()->user();
@@ -32,7 +36,7 @@
     <div class="flex items-center gap-3">
         {{-- White badge behind the emblem so the dark line-art + gold wreath read clearly on the dark header --}}
         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 cms-logo-badge">
-            <img src="/images/gmj-llc-final-logo.jpg"
+            <img src="{{ $companyLogoUrl }}"
                  alt="Logo"
                  class="w-full h-full rounded-full"
                  style="object-fit: contain;">

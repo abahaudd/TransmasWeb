@@ -15,7 +15,7 @@ class CountriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('country')
+                TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('country_code')
                     ->searchable(),

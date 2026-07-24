@@ -23,7 +23,7 @@ class ActivityLogResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
+        return 'Administration';
     }
 
     public static function infolist(Schema $schema): Schema

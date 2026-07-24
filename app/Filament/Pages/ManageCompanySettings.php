@@ -12,6 +12,8 @@ use Filament\Schemas\Schema;
 
 class ManageCompanySettings extends SettingsPage
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string $settings = CompanySettings::class;
 
     protected static ?string $title = 'Company Settings';

@@ -50,7 +50,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Control Panel')->icon('heroicon-o-adjustments-horizontal'),
                 NavigationGroup::make('Administration')->icon('heroicon-o-shield-check'),
             ])
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
             ->collapsibleNavigationGroups()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

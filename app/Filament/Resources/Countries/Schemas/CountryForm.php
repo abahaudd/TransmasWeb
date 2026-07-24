@@ -11,7 +11,7 @@ class CountryForm
     {
         return $schema
             ->components([
-                TextInput::make('country')
+                TextInput::make('name')
                     ->required(),
                 TextInput::make('country_code')
                     ->required(),

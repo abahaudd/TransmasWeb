@@ -15,8 +15,9 @@ class Country extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'country',
+        'name',
         'country_code',
+        'country_code_alpha3',
         'location_title',
         'territory_title',
         'postal_code_title',

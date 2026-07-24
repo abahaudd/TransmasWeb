@@ -25,8 +25,20 @@ class CompanySettings extends Settings
 
     public function logoUrl(): ?string
     {
-        return $this->logo_path
-            ? asset('storage/'.ltrim($this->logo_path, '/'))
-            : null;
+        if (! $this->logo_path) {
+            return null;
+        }
+
+        $path = trim($this->logo_path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
+            return $path;
+        }
+
+        return asset('storage/' . ltrim($path, '/'));
     }
 }

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
             $table->string('name');                 // e.g. "United States"
-            $table->string('country_code', 2);         // ISO 3166-1 alpha-2, e.g. "US"
+            $table->string('country_code', 6);         // 971, ISO 3166-1 numeric, e.g. "840"
             $table->string('country_code_alpha3', 3);  // ISO 3166-1 alpha-3, e.g. "USA"
             $table->string('location_title')->nullable();    // e.g. "City"
             $table->string('territory_title')->nullable();   // e.g. "State, Province, Emirate ..."

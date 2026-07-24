@@ -2,7 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Settings\CompanySettings;
 use App\Settings\GeneralSettings;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -28,6 +30,46 @@ class ManageGeneralSettings extends SettingsPage
         return auth()->user()?->isSuperAdmin() ?? false;
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $companySettings = app(CompanySettings::class);
+
+        return array_merge($data, [
+            'company_name' => $companySettings->company_name,
+            'logo_path' => $companySettings->logo_path,
+            'address' => $companySettings->address,
+            'phone' => $companySettings->phone,
+            'email' => $companySettings->email,
+            'website' => $companySettings->website,
+        ]);
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $companySettings = app(CompanySettings::class);
+
+        $companySettings->fill([
+            'company_name' => $data['company_name'] ?? $companySettings->company_name,
+            'logo_path' => $data['logo_path'] ?? null,
+            'address' => $data['address'] ?? null,
+            'phone' => $data['phone'] ?? null,
+            'email' => $data['email'] ?? null,
+            'website' => $data['website'] ?? null,
+        ]);
+        $companySettings->save();
+
+        unset(
+            $data['company_name'],
+            $data['logo_path'],
+            $data['address'],
+            $data['phone'],
+            $data['email'],
+            $data['website'],
+        );
+
+        return $data;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -46,6 +88,37 @@ class ManageGeneralSettings extends SettingsPage
                             ->label('Support email')
                             ->email(),
                     ])
+                    ->columnSpanFull(),
+                Section::make('Company')
+                    ->description('Shown in the public site header and footer.')
+                    ->schema([
+                        TextInput::make('company_name')
+                            ->label('Company name')
+                            ->required()
+                            ->maxLength(255),
+                        FileUpload::make('logo_path')
+                            ->label('Logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->imageEditor()
+                            ->helperText('Displayed in the site navigation next to the company name.'),
+                    ])
+                    ->columnSpanFull(),
+                Section::make('Company Contact details')
+                    ->description('Shown in the public site footer.')
+                    ->schema([
+                        Textarea::make('address')
+                            ->rows(2)
+                            ->columnSpanFull(),
+                        TextInput::make('phone')
+                            ->tel(),
+                        TextInput::make('email')
+                            ->email(),
+                        TextInput::make('website')
+                            ->url(),
+                    ])
+                    ->columns(3)
                     ->columnSpanFull(),
                 Section::make('Localization')
                     ->schema([
