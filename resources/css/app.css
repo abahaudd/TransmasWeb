@@ -1,0 +1,384 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root,
+.fi-body,
+[data-filament-panel-id] {
+    /* Admin style set */
+    --color-primary: #EFF6FF;
+    --color-secondary: #6B7280;
+    --color-tertiary: #0EA5E9;
+    --color-accent: #6366F1;
+    --color-neutral: #F3F4F6;
+
+    --color-success: #DCFCE7;
+    --color-warning: #FEF3C7;
+    --color-danger: #FEE2E2;
+
+    --color-primary-text: #1D4ED8;
+    --color-success-text: #166534;
+    --color-warning-text: #A16207;
+    --color-danger-text: #B91C1C;
+
+    --menu-bg: #111827;
+    --menu-hover: #1F2937;
+    --menu-active: #DBEAFE;
+    --menu-active-text: #1E40AF;
+    --menu-text: #F9FAFB;
+    --menu-text-muted: #D1D5DB;
+    --menu-border: #374151;
+
+    --cms-ink: #111827;
+    --cms-muted: var(--color-secondary);
+    --cms-gold-border-soft: var(--color-accent);
+    --cms-surface: #FFFFFF;
+}
+
+.cms-page {
+    /* CMS style set */
+    --color-primary: #DBEAFE;
+    --color-secondary: #64748B;
+    --color-tertiary: #0F766E;
+    --color-accent: #8B5CF6;
+    --color-neutral: #E5E7EB;
+
+    --color-success: #DCFCE7;
+    --color-warning: #FEF3C7;
+    --color-danger: #FEE2E2;
+
+    --color-primary-text: #2563EB;
+    --color-success-text: #15803D;
+    --color-warning-text: #B45309;
+    --color-danger-text: #DC2626;
+
+    --menu-bg: #1E293B;
+    --menu-hover: #334155;
+    --menu-active: #DBEAFE;
+    --menu-active-text: #2563EB;
+    --menu-text: #F8FAFC;
+    --menu-text-muted: #CBD5E1;
+    --menu-border: #475569;
+
+    --cms-ink: #0F172A;
+    --cms-muted: var(--color-secondary);
+    --cms-gold-border-soft: var(--color-accent);
+    --cms-surface: #FFFFFF;
+}
+
+/* Optional explicit dark mode trigger */
+html.dark .cms-page {
+    --color-primary: #1E3A8A;
+    --color-secondary: #94A3B8;
+    --color-tertiary: #14B8A6;
+    --color-accent: #A78BFA;
+    --color-neutral: #0F172A;
+
+    --color-success: #14532D;
+    --color-warning: #78350F;
+    --color-danger: #7F1D1D;
+
+    --color-primary-text: #BFDBFE;
+    --color-success-text: #86EFAC;
+    --color-warning-text: #FCD34D;
+    --color-danger-text: #FCA5A5;
+
+    --menu-bg: #0B1120;
+    --menu-hover: #1E293B;
+    --menu-active: #1E3A8A;
+    --menu-active-text: #BFDBFE;
+    --menu-text: #E2E8F0;
+    --menu-text-muted: #94A3B8;
+    --menu-border: #334155;
+
+    --cms-ink: #E2E8F0;
+    --cms-muted: #94A3B8;
+    --cms-gold-border-soft: #A78BFA;
+    --cms-surface: #0F172A;
+}
+
+/* System dark mode fallback */
+@media (prefers-color-scheme: dark) {
+    .cms-page {
+        --color-primary: #1E3A8A;
+        --color-secondary: #94A3B8;
+        --color-tertiary: #14B8A6;
+        --color-accent: #A78BFA;
+        --color-neutral: #0F172A;
+
+        --color-success: #14532D;
+        --color-warning: #78350F;
+        --color-danger: #7F1D1D;
+
+        --color-primary-text: #BFDBFE;
+        --color-success-text: #86EFAC;
+        --color-warning-text: #FCD34D;
+        --color-danger-text: #FCA5A5;
+
+        --menu-bg: #0B1120;
+        --menu-hover: #1E293B;
+        --menu-active: #1E3A8A;
+        --menu-active-text: #BFDBFE;
+        --menu-text: #E2E8F0;
+        --menu-text-muted: #94A3B8;
+        --menu-border: #334155;
+
+        --cms-ink: #E2E8F0;
+        --cms-muted: #94A3B8;
+        --cms-gold-border-soft: #A78BFA;
+        --cms-surface: #0F172A;
+    }
+}
+
+/* Alpine sets this attribute on x-cloak elements and strips it once it boots;
+   without this rule, x-show panels (mobile drawer, account dropdown) are
+   visible by default before Alpine initializes. */
+[x-cloak] {
+    display: none !important;
+}
+
+.cms-page {
+    background: var(--color-neutral);
+    color: var(--cms-ink);
+}
+
+.cms-header {
+    background: var(--menu-bg);
+    border-bottom: 1px solid var(--menu-border);
+    color: var(--menu-text);
+}
+
+.cms-nav-link {
+    color: var(--menu-text-muted);
+    border-radius: 0.5rem;
+    padding: 0.35rem 0.7rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.cms-nav-link:hover,
+.cms-nav-link:focus-visible {
+    background: var(--menu-hover);
+    color: var(--menu-text);
+}
+
+.cms-drawer {
+    background: var(--menu-bg);
+    color: var(--menu-text);
+}
+
+.cms-panel {
+    background: var(--cms-surface);
+    border: 1px solid var(--color-neutral);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+
+.cms-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    color: var(--cms-ink);
+    transition: background-color 0.15s ease;
+}
+
+.cms-dropdown-item:hover,
+.cms-dropdown-item:focus-visible {
+    background: var(--color-primary);
+}
+
+.cms-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 0.625rem;
+    padding: 0.62rem 1rem;
+    font-weight: 600;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.cms-btn:hover {
+    transform: translateY(-1px);
+}
+
+.cms-btn--primary {
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    border: 1px solid color-mix(in oklab, var(--color-primary-text) 30%, transparent);
+}
+
+.cms-btn--primary:hover,
+.cms-btn--primary:focus-visible {
+    background: color-mix(in oklab, var(--color-primary) 82%, white);
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--color-primary-text) 20%, transparent);
+}
+
+.cms-btn--outline {
+    background: transparent;
+    color: var(--menu-text);
+    border: 1px solid var(--menu-border);
+}
+
+.cms-btn--outline:hover,
+.cms-btn--outline:focus-visible {
+    background: var(--menu-hover);
+}
+
+.cms-btn--sm {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.cms-muted {
+    color: var(--cms-muted);
+}
+
+.cms-link-gold,
+.cms-link-muted {
+    color: var(--menu-text-muted);
+}
+
+.cms-link-gold:hover,
+.cms-link-muted:hover {
+    color: var(--menu-text);
+}
+
+.cms-divider,
+.cms-divider-soft {
+    border-color: var(--menu-border);
+}
+
+.cms-icon-gold,
+.cms-gold-light {
+    color: var(--color-tertiary);
+}
+
+.cms-logo-badge {
+    padding: 2px;
+    box-shadow:
+        0 0 0 2px color-mix(in oklab, var(--color-tertiary) 55%, transparent),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.cms-avatar {
+    border-radius: 9999px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid var(--menu-border);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-primary) 30%, transparent);
+}
+
+.cms-avatar--nav {
+    width: 18px;
+    height: 18px;
+}
+
+.cms-avatar--mobile {
+    width: 16px;
+    height: 16px;
+}
+
+.cms-kicker-line {
+    width: 2rem;
+    height: 2px;
+    background: var(--color-accent);
+}
+
+.cms-pill {
+    border: 1px solid var(--menu-border);
+    color: var(--menu-text-muted);
+    border-radius: 9999px;
+    padding: 0.3rem 0.7rem;
+}
+
+.cms-pill--active {
+    background: var(--menu-active);
+    color: var(--menu-active-text);
+    border-color: transparent;
+}
+
+.cms-tag {
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    border-radius: 9999px;
+    padding: 0.18rem 0.55rem;
+}
+
+.cms-alert--error {
+    background: var(--color-danger);
+    color: var(--color-danger-text);
+    border: 1px solid color-mix(in oklab, var(--color-danger-text) 25%, transparent);
+    border-radius: 0.5rem;
+}
+
+.cms-alert--success {
+    background: var(--color-success);
+    color: var(--color-success-text);
+    border: 1px solid color-mix(in oklab, var(--color-success-text) 25%, transparent);
+    border-radius: 0.5rem;
+}
+
+.cms-content {
+    color: var(--cms-ink);
+}
+
+.cms-content-block {
+    border-color: var(--menu-border);
+}
+
+.cms-content-empty {
+    color: var(--cms-ink);
+}
+
+
+
+/* ------------------------------------------------------------------
+   UI Components
+------------------------------------------------------------------ */
+
+.ui-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    transition: all .2s ease;
+}
+
+.ui-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+}
+
+.ui-card-title {
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--cms-muted);
+    margin-bottom: .75rem;
+}
+
+.ui-stat-title {
+    font-size: .875rem;
+    color: var(--cms-muted);
+}
+
+.ui-stat-value {
+    margin-top: .35rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cms-ink);
+}
+
+.ui-stat-trend {
+    margin-top: .5rem;
+    font-size: .8rem;
+    color: var(--color-success-text);
+}
