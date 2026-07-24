@@ -1,13 +1,6 @@
-# LaravelStarter
+# TransMasWeb
 
-A foundation application built on **Laravel 12 + Filament 4**. It ships with the plumbing every
-application needs — authentication, roles & permissions, site settings, audit logging,
-notifications, dashboards, backups, health checks, and a block-based CMS — so feature modules
-can be dropped on top without re-building the basics.
-
-This instance (**fintrak**) uses that foundation to build a personal finance application; the
-first feature module on top of it is **Investment tracking** — stock/ETF holdings, transaction
-history, and brokerage CSV import — described below.
+This is the Laravel versio of Transmas with MySQL as the DB.
 
 ## Feature overview
 
@@ -21,7 +14,7 @@ history, and brokerage CSV import — described below.
 | Notifications | Filament database notifications (bell icon in the panel top bar), delivered through the queue |
 | Dashboards | Role-based: widgets gate themselves with `canView()` and Shield widget permissions |
 | CMS | Page + Block models, Filament resource for editing, block-partial Blade rendering on the public site |
-| **Investment tracking** | Brokers, accounts, symbols, transactions, and computed holdings; brokerage CSV import with per-broker column/code mapping; portfolio dashboard widgets — see [Investment tracking](#investment-tracking) below |
+
 | Media | `spatie/laravel-medialibrary` (avatars with thumbnail conversions) |
 | Backups | `spatie/laravel-backup`, scheduled daily |
 | Health | `spatie/laravel-health` — `/health` dashboard (signed-in users), checks scheduled every 5 minutes |
@@ -100,44 +93,6 @@ payload; each type maps to a Blade partial in `resources/views/cms/blocks/{type}
 
 Company identity shown on the public site (name, logo, address, phone, email, website) is
 managed under **Control Panel → Company Settings**.
-
-## Investment tracking
-
-Located at `app/Modules/Investment` and registered like any other module (see
-[Building a module](#building-a-module)). Everything lives under the **Investments**
-navigation group in the admin panel.
-
-**Data model** (`app/Modules/Investment/Models`):
-
-| Model | Purpose |
-|---|---|
-| `Broker` | A brokerage firm, owned by a user (e.g. Robinhood, Fidelity) |
-| `Account` | An account held at a broker (currency, opened/closed dates) |
-| `Symbol` | A tradable security (ticker, exchange, asset type); auto-created on first reference |
-| `Transaction` | The ledger — buy, sell, dividend, interest, deposit, withdrawal, fee, transfer in/out |
-| `Holding` | **Computed**, not hand-edited: current quantity/cost basis per account+symbol, rebuilt automatically from `Transaction` history (weighted-average cost) whenever a transaction is saved or deleted |
-| `ImportProfile` | Per-broker CSV mapping: source column → canonical field, and source transaction code → canonical type |
-| `ImportBatch` | Audit log of a CSV import run: row counts and any per-row errors |
-
-Brokers, Accounts, Symbols, Transactions, and Import Profiles have full CRUD screens. Holdings
-and Import Batches are List/View only, since both are system-generated records.
-
-**Holdings math** (`Support\HoldingsRecalculator`, triggered by `Observers\TransactionObserver`):
-`buy` and `transfer_in` add quantity and cost; `sell` and `transfer_out` remove quantity at the
-current average cost. Other transaction types are cash-only and don't move a position.
-
-**CSV import** (`Support\CsvTransactionImporter`, triggered from the **Import CSV** action on
-the Transactions list): parses a brokerage export according to the selected `ImportProfile`,
-handling accounting-style currency formatting (`($1,234.56)` = negative) and per-code type
-mapping — including transaction codes whose meaning depends on the amount's sign (e.g. Robinhood's
-`ACH` row is a deposit or withdrawal depending on whether the amount is positive or negative).
-Rows are de-duplicated by content hash, so re-importing the same file is a no-op. Unrecognized
-transaction codes are skipped and recorded as an error on the `ImportBatch` rather than guessed.
-A **Robinhood** profile ships pre-configured; add more via **Investments → Import Profiles** — no
-code changes needed for a new brokerage's column layout.
-
-**Dashboard widgets**: portfolio value / cost basis / gain-loss, allocation by asset type, and
-recent transactions.
 
 ## Building a module
 
