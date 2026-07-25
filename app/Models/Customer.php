@@ -119,7 +119,7 @@ class Customer extends Model
 
         if (! self::query()->whereKey($parentId)->exists()) {
             throw ValidationException::withMessages([
-                'parent_id' => 'Selected parent branch is invalid.',
+                'parent_id' => __('errors.customer.invalid_parent'),
             ]);
         }
 
@@ -129,13 +129,13 @@ class Customer extends Model
 
         if ($parentId === (int) $this->getKey()) {
             throw ValidationException::withMessages([
-                'parent_id' => 'A branch cannot be its own parent.',
+                'parent_id' => __('errors.customer.self_parent'),
             ]);
         }
 
         if (in_array($parentId, $this->getDescendantIds(), true)) {
             throw ValidationException::withMessages([
-                'parent_id' => 'Invalid parent branch. You cannot assign a child branch as parent.',
+                'parent_id' => __('errors.customer.circular_parent'),
             ]);
         }
     }

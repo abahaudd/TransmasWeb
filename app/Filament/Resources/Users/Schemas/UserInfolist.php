@@ -11,14 +11,18 @@ class UserInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('username'),
+                TextEntry::make('username')
+                    ->label(__('labels.username')),
                 TextEntry::make('email')
-                    ->label('Email address'),
+                    ->label(__('labels.email_address')),
                 TextEntry::make('email_verified_at')
+                    ->label(__('labels.user.email_verified_at'))
                     ->dateTime(),
                 TextEntry::make('created_at')
+                    ->label(__('labels.created_at'))
                     ->dateTime(),
                 TextEntry::make('updated_at')
+                    ->label(__('labels.updated_at'))
                     ->dateTime(),
             ]);
     }

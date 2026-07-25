@@ -16,18 +16,22 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('username')
+                    ->label(__('labels.username'))
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('labels.email_address'))
                     ->searchable(),
                 TextColumn::make('email_verified_at')
+                    ->label(__('labels.user.email_verified_at'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -36,8 +40,10 @@ class UsersTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()
+                    ->tooltip(__('labels.view')),
+                EditAction::make()
+                    ->tooltip(__('labels.edit')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

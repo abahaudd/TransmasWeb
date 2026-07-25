@@ -34,24 +34,32 @@ class DesignationResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'HR Management';
+        return __('labels.nav.groups.hr_management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.designations');
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             Select::make('department_id')
-                ->label('Department')
-                ->helperText('Leave empty to make this designation available across departments.')
+                ->label(__('labels.designation.department'))
+                ->helperText(__('labels.designation.department_helper'))
                 ->options(fn () => Department::query()->orderBy('name')->pluck('name', 'id')->all())
                 ->searchable()
                 ->preload(),
             TextInput::make('title')
+                ->label(__('labels.designation.title'))
                 ->required()
                 ->maxLength(150),
             TextInput::make('code')
+                ->label(__('labels.code'))
                 ->maxLength(20),
             Toggle::make('is_active')
+                ->label(__('labels.active'))
                 ->default(true),
         ]);
     }
@@ -61,14 +69,17 @@ class DesignationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label(__('labels.designation.title'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('code')
+                    ->label(__('labels.code'))
                     ->placeholder('-'),
                 TextColumn::make('department.name')
-                    ->label('Department')
-                    ->placeholder('All departments'),
+                    ->label(__('labels.designation.department'))
+                    ->placeholder(__('labels.designation.all_departments')),
                 IconColumn::make('is_active')
+                    ->label(__('labels.active'))
                     ->boolean()
                     ->sortable(),
             ])

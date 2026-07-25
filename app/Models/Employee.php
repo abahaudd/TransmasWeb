@@ -159,7 +159,7 @@ class Employee extends Model
 
         if (! self::query()->whereKey($managerId)->exists()) {
             throw ValidationException::withMessages([
-                'reporting_to_id' => 'Selected manager is invalid.',
+                'reporting_to_id' => __('errors.employee.invalid_manager'),
             ]);
         }
 
@@ -169,13 +169,13 @@ class Employee extends Model
 
         if ($managerId === (int) $this->getKey()) {
             throw ValidationException::withMessages([
-                'reporting_to_id' => 'An employee cannot report to themselves.',
+                'reporting_to_id' => __('errors.employee.self_report'),
             ]);
         }
 
         if (in_array($managerId, $this->getReportChainIds(), true)) {
             throw ValidationException::withMessages([
-                'reporting_to_id' => 'Invalid manager. You cannot assign a direct/indirect report as the manager.',
+                'reporting_to_id' => __('errors.employee.circular_report'),
             ]);
         }
     }

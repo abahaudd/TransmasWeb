@@ -15,75 +15,87 @@ class CompanyInfolist
     {
         return $schema
             ->components([
-                Section::make('Company Details')
+                Section::make(__('labels.company.section_details'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('company_type')
-                                    ->label('Type')
+                                    ->label(__('labels.company.company_type'))
                                     ->badge(),
                                 TextEntry::make('status')
+                                    ->label(__('labels.status'))
                                     ->badge()
                                     ->color(fn (string $state): string => $state === Company::STATUS_ACTIVE ? 'success' : 'gray'),
-                                TextEntry::make('legal_name'),
+                                TextEntry::make('legal_name')
+                                    ->label(__('labels.company.legal_name')),
                                 TextEntry::make('trade_name')
+                                    ->label(__('labels.company.trade_name'))
                                     ->placeholder('-'),
                                 TextEntry::make('display_name')
+                                    ->label(__('labels.company.display_name'))
                                     ->placeholder('-'),
                                 TextEntry::make('company_code')
-                                    ->label('Company Code')
+                                    ->label(__('labels.company.company_code'))
                                     ->placeholder('-'),
                                 TextEntry::make('parent.legal_name')
-                                    ->label('Parent Company')
+                                    ->label(__('labels.company.parent_company'))
                                     ->placeholder('-'),
                                 TextEntry::make('email')
+                                    ->label(__('labels.email'))
                                     ->placeholder('-'),
                                 TextEntry::make('website')
+                                    ->label(__('labels.website'))
                                     ->placeholder('-'),
                             ]),
                     ]),
 
-                Section::make('Registration & Locale')
+                Section::make(__('labels.company.section_registration_locale'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('taxCountry.name')
-                                    ->label('Tax Country')
+                                    ->label(__('labels.company.tax_country'))
                                     ->placeholder('-'),
                                 TextEntry::make('timezone')
+                                    ->label(__('labels.company.timezone'))
                                     ->placeholder('-'),
                                 TextEntry::make('incorporation_date')
+                                    ->label(__('labels.company.incorporation_date'))
                                     ->date()
                                     ->placeholder('-'),
                                 TextEntry::make('financial_year_start')
+                                    ->label(__('labels.company.financial_year_start'))
                                     ->date()
                                     ->placeholder('-'),
                             ]),
                     ]),
 
-                Section::make('Working Hours')
+                Section::make(__('labels.company.section_working_hours'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('start_work_hour')
-                                    ->label('Start')
+                                    ->label(__('labels.company.start_work_hour'))
                                     ->time()
                                     ->placeholder('-'),
                                 TextEntry::make('end_work_hour')
-                                    ->label('End')
+                                    ->label(__('labels.company.end_work_hour'))
                                     ->time()
                                     ->placeholder('-'),
                                 TextEntry::make('weekends')
+                                    ->label(__('labels.company.weekends'))
                                     ->placeholder('-'),
                             ]),
                     ]),
 
-                Section::make('Branding & Notes')
+                Section::make(__('labels.company.section_branding_notes'))
                     ->schema([
                         ImageEntry::make('logo')
+                            ->label(__('labels.company.logo'))
                             ->circular()
                             ->visible(fn (Company $record): bool => filled($record->logo)),
                         TextEntry::make('notes')
+                            ->label(__('labels.notes'))
                             ->placeholder('-')
                             ->columnSpanFull(),
                     ]),

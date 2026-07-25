@@ -50,11 +50,11 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
-                NavigationGroup::make('CMS')->icon('heroicon-o-newspaper'),
-                NavigationGroup::make('Customer Management')->icon('heroicon-o-user-group'),
-                NavigationGroup::make('HR Management')->icon('heroicon-o-briefcase'),
-                NavigationGroup::make('Control Panel')->icon('heroicon-o-adjustments-horizontal'),
-                NavigationGroup::make('Administration')->icon('heroicon-o-shield-check'),
+                NavigationGroup::make(__('labels.nav.groups.cms'))->icon('heroicon-o-newspaper'),
+                NavigationGroup::make(__('labels.nav.groups.customer_management'))->icon('heroicon-o-user-group'),
+                NavigationGroup::make(__('labels.nav.groups.hr_management'))->icon('heroicon-o-briefcase'),
+                NavigationGroup::make(__('labels.nav.groups.control_panel'))->icon('heroicon-o-adjustments-horizontal'),
+                NavigationGroup::make(__('labels.nav.groups.administration'))->icon('heroicon-o-shield-check'),
             ])
             ->sidebarCollapsibleOnDesktop()
             ->collapsibleNavigationGroups()

@@ -22,7 +22,12 @@ class RoleResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Administration';
+        return __('labels.nav.groups.administration');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.roles');
     }
 
     public static function form(Schema $schema): Schema

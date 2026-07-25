@@ -17,15 +17,26 @@ class CmsPageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $modelLabel = 'Page';
-
-    protected static ?string $pluralModelLabel = 'Pages';
-
     protected static ?string $slug = 'cms-pages';
+
+    public static function getModelLabel(): string
+    {
+        return __('labels.cms_page.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('labels.nav.pages');
+    }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CMS';
+        return __('labels.nav.groups.cms');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.pages');
     }
 
     public static function form(Schema $schema): Schema

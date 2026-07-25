@@ -40,12 +40,12 @@ class EmployeeResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'HR Management';
+        return __('labels.nav.groups.hr_management');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Employees';
+        return __('labels.nav.employees');
     }
 
     public static function canViewAny(): bool

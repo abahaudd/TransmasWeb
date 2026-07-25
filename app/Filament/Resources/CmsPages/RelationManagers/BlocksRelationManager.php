@@ -27,20 +27,23 @@ class BlocksRelationManager extends RelationManager
         return $schema
             ->components([
                 Select::make('type')
+                    ->label(__('labels.block.type'))
                     ->options(Block::TYPES)
                     ->required(),
                 TextInput::make('name')
-                    ->helperText('Internal label shown only in this list.')
+                    ->label(__('labels.block.name'))
+                    ->helperText(__('labels.block.name_helper'))
                     ->maxLength(255),
                 TextInput::make('position')
+                    ->label(__('labels.block.position'))
                     ->numeric()
                     ->default(0)
                     ->required(),
                 Toggle::make('is_active')
-                    ->label('Active')
+                    ->label(__('labels.block.active'))
                     ->default(true),
                 Textarea::make('data')
-                    ->label('Content (JSON)')
+                    ->label(__('labels.block.content_json'))
                     ->rows(16)
                     ->rule('nullable|json')
                     ->formatStateUsing(fn ($state): ?string => filled($state)
@@ -49,7 +52,7 @@ class BlocksRelationManager extends RelationManager
                     ->dehydrateStateUsing(fn (?string $state): ?array => filled($state)
                         ? json_decode($state, true)
                         : null)
-                    ->helperText('The structured content this block renders. Keys depend on the block type.')
+                    ->helperText(__('labels.block.content_json_helper'))
                     ->columnSpanFull(),
             ])
             ->columns(2);
@@ -61,13 +64,16 @@ class BlocksRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('position')
+                    ->label(__('labels.block.position'))
                     ->sortable(),
                 TextColumn::make('type')
+                    ->label(__('labels.block.type'))
                     ->badge(),
                 TextColumn::make('name')
+                    ->label(__('labels.block.name'))
                     ->searchable(),
                 IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label(__('labels.block.active'))
                     ->boolean(),
             ])
             ->headerActions([

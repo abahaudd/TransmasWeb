@@ -16,6 +16,8 @@ class CustomerForm
 {
     public static function configure(Schema $schema): Schema
     {
+        // Address field labels are admin-configurable (settings table, group
+        // "location"), not hardcoded — intentionally not run through __().
         $locationHeadings = Cache::remember('location_headings', 3600, function () {
             try {
                 return Setting::where('group', 'location')->where('name', 'headings')->first()?->payload ?? [];
@@ -58,9 +60,10 @@ class CustomerForm
                 ->prefixIcon('heroicon-o-flag')
                 ->createOptionForm([
                     TextInput::make('name')
+                        ->label(__('labels.name'))
                         ->required(),
                     TextInput::make('country_code')
-                        ->label('Country calling code')
+                        ->label(__('labels.customer.country_calling_code'))
                         ->required(),
                     TextInput::make('country_code_alpha3')
                         ->required(),
@@ -88,27 +91,32 @@ class CustomerForm
 
         return $schema
             ->components([
-                Section::make('Customer Details')
+                Section::make(__('labels.customer.section_details'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('name')
+                                    ->label(__('labels.name'))
                                     ->required()
                                     ->prefixIcon('heroicon-o-building-office')
                                     ->columnSpanFull(),
                                 TextInput::make('phone_main')
+                                    ->label(__('labels.phone'))
                                     ->tel()
                                     ->prefixIcon('heroicon-o-phone'),
                                 TextInput::make('phone_secondary')
+                                    ->label(__('labels.mobile'))
                                     ->tel()
                                     ->prefixIcon('heroicon-o-device-phone-mobile'),
                                 TextInput::make('email')
+                                    ->label(__('labels.email'))
                                     ->email()
                                     ->prefixIcon('heroicon-o-envelope'),
                                 TextInput::make('website')
+                                    ->label(__('labels.website'))
                                     ->prefixIcon('heroicon-o-globe-alt'),
                                 Select::make('parent_id')
-                                    ->label('Parent customer')
+                                    ->label(__('labels.customer.parent_customer'))
                                     ->options(fn () => Customer::query()->orderBy('name')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->preload()
@@ -119,7 +127,7 @@ class CustomerForm
                             ]),
                     ]),
 
-                Section::make('Location Details')
+                Section::make(__('labels.customer.section_location_details'))
                     ->schema([
                         Grid::make(2)
                             ->schema($addressComponents),

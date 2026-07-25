@@ -30,12 +30,12 @@ class BlockResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CMS';
+        return __('labels.nav.groups.cms');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Blocks';
+        return __('labels.nav.blocks');
     }
 
     public static function form(Schema $schema): Schema
@@ -43,21 +43,25 @@ class BlockResource extends Resource
         return $schema
             ->components([
                 Select::make('page_id')
-                    ->label('Page')
+                    ->label(__('labels.block.page'))
                     ->options(fn (): array => Page::query()->orderBy('title')->pluck('title', 'id')->all())
                     ->searchable()
                     ->preload()
                     ->required(),
                 Select::make('type')
+                    ->label(__('labels.block.type'))
                     ->options(Block::TYPES)
                     ->required(),
                 TextInput::make('name')
+                    ->label(__('labels.block.name'))
                     ->maxLength(255),
                 TextInput::make('position')
+                    ->label(__('labels.block.position'))
                     ->numeric()
                     ->default(0)
                     ->required(),
                 Toggle::make('is_active')
+                    ->label(__('labels.block.active'))
                     ->default(true)
                     ->required(),
             ]);
@@ -68,16 +72,20 @@ class BlockResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('page.title')
-                    ->label('Page')
+                    ->label(__('labels.block.page'))
                     ->searchable(),
                 TextColumn::make('type')
+                    ->label(__('labels.block.type'))
                     ->badge()
                     ->searchable(),
                 TextColumn::make('name')
+                    ->label(__('labels.block.name'))
                     ->searchable(),
                 TextColumn::make('position')
+                    ->label(__('labels.block.position'))
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label(__('labels.block.active'))
                     ->boolean(),
             ])
             ->recordActions([

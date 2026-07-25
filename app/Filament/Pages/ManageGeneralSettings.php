@@ -16,13 +16,19 @@ class ManageGeneralSettings extends SettingsPage
 {
     use InteractsWithSettingsGroup;
 
-    protected static ?string $title = 'Site Settings';
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.site_settings');
+    }
 
-    protected static ?string $navigationLabel = 'Site Settings';
+    public function getTitle(): string
+    {
+        return __('labels.nav.site_settings');
+    }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
+        return __('labels.nav.groups.control_panel');
     }
 
     public static function canAccess(): bool
@@ -76,60 +82,65 @@ class ManageGeneralSettings extends SettingsPage
     {
         return $schema
             ->components([
-                Section::make('Site')
-                    ->description('Identity of this application, available to all modules.')
+                Section::make(__('labels.settings.general.section_site'))
+                    ->description(__('labels.settings.general.section_site_description'))
                     ->schema([
                         TextInput::make('site_name')
-                            ->label('Site name')
+                            ->label(__('labels.settings.general.site_name'))
                             ->required()
                             ->maxLength(255),
                         Textarea::make('site_description')
-                            ->label('Site description')
+                            ->label(__('labels.settings.general.site_description'))
                             ->rows(3),
                         TextInput::make('support_email')
-                            ->label('Support email')
+                            ->label(__('labels.settings.general.support_email'))
                             ->email(),
                     ])
                     ->columnSpanFull(),
-                Section::make('Company')
-                    ->description('Shown in the public site header and footer.')
+                Section::make(__('labels.settings.general.section_company'))
+                    ->description(__('labels.settings.general.section_company_description'))
                     ->schema([
                         TextInput::make('company_name')
-                            ->label('Company name')
+                            ->label(__('labels.settings.general.company_name'))
                             ->required()
                             ->maxLength(255),
                         FileUpload::make('logo_path')
-                            ->label('Logo')
+                            ->label(__('labels.settings.general.logo'))
                             ->image()
                             ->disk('public')
                             ->directory('branding')
                             ->imageEditor()
-                            ->helperText('Displayed in the site navigation next to the company name.'),
+                            ->helperText(__('labels.settings.general.logo_helper')),
                     ])
                     ->columnSpanFull(),
-                Section::make('Company Contact details')
-                    ->description('Shown in the public site footer.')
+                Section::make(__('labels.settings.general.section_contact'))
+                    ->description(__('labels.settings.general.section_contact_description'))
                     ->schema([
                         Textarea::make('address')
+                            ->label(__('labels.address'))
                             ->rows(2)
                             ->columnSpanFull(),
                         TextInput::make('phone')
+                            ->label(__('labels.phone'))
                             ->tel(),
                         TextInput::make('email')
+                            ->label(__('labels.email'))
                             ->email(),
                         TextInput::make('website')
+                            ->label(__('labels.website'))
                             ->url(),
                     ])
                     ->columns(3)
                     ->columnSpanFull(),
-                Section::make('Localization')
+                Section::make(__('labels.settings.general.section_localization'))
                     ->schema([
                         Select::make('timezone')
+                            ->label(__('labels.settings.general.timezone'))
                             ->options(collect(timezone_identifiers_list())->mapWithKeys(fn (string $tz) => [$tz => $tz]))
                             ->searchable()
                             ->required(),
                         TextInput::make('locale')
-                            ->label('Default locale')
+                            ->label(__('labels.settings.general.default_locale'))
                             ->required()
                             ->maxLength(10),
                     ])

@@ -17,13 +17,17 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class UsersRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
 
-    protected static ?string $title = 'Account Users';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('labels.account_user.section_title');
+    }
 
     public function isReadOnly(): bool
     {
@@ -34,24 +38,24 @@ class UsersRelationManager extends RelationManager
     {
         return $schema->components([
             TextInput::make('name')
-                ->label('Name')
+                ->label(__('labels.name'))
                 ->required()
                 ->maxLength(255),
             TextInput::make('username')
-                ->label('Username')
+                ->label(__('labels.username'))
                 ->required()
                 ->maxLength(255)
                 ->unique('users', 'username'),
             Grid::make(2)
                 ->schema([
                     TextInput::make('email')
-                        ->label('Email')
+                        ->label(__('labels.email'))
                         ->email()
                         ->required()
                         ->maxLength(255)
                         ->unique('users', 'email'),
                     TextInput::make('phone')
-                        ->label('Phone')
+                        ->label(__('labels.phone'))
                         ->tel()
                         ->maxLength(255),
                 ])
@@ -59,7 +63,7 @@ class UsersRelationManager extends RelationManager
             Grid::make(2)
                 ->schema([
                     DatePicker::make('start_date')
-                        ->label('Create Date')
+                        ->label(__('labels.account_user.create_date'))
                         ->default(now())
                         ->required()
                         ->live()
@@ -74,7 +78,7 @@ class UsersRelationManager extends RelationManager
                         })
                         ->native(false),
                     DatePicker::make('end_date')
-                        ->label('End Date')
+                        ->label(__('labels.end_date'))
                         ->required()
                         ->default(fn () => now()->addDays(
                             (int) Setting::getPayloadValue('customer', 'user_id', 'validity', 365)
@@ -85,7 +89,7 @@ class UsersRelationManager extends RelationManager
             Grid::make(2)
                 ->schema([
                     TextInput::make('password')
-                        ->label('Password')
+                        ->label(__('labels.password'))
                         ->password()
                         ->revealable()
                         ->required()
@@ -93,7 +97,7 @@ class UsersRelationManager extends RelationManager
                         ->maxLength(255)
                         ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)),
                     TextInput::make('password_confirmation')
-                        ->label('Verify password')
+                        ->label(__('labels.verify_password'))
                         ->password()
                         ->revealable()
                         ->required()
@@ -109,23 +113,23 @@ class UsersRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('labels.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('username')
-                    ->label('Username')
+                    ->label(__('labels.username'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('start_date')
-                    ->label('Create Date')
+                    ->label(__('labels.account_user.create_date'))
                     ->date()
                     ->sortable(),
                 TextColumn::make('end_date')
-                    ->label('End Date')
+                    ->label(__('labels.end_date'))
                     ->date()
                     ->icon('heroicon-o-pencil-square')
                     ->iconPosition(IconPosition::After)
-                    ->tooltip('Edit End Date')
+                    ->tooltip(__('actions.edit_end_date'))
                     ->action(
                         Action::make('editEndDate')
                             ->fillForm(fn (User $record): array => [
@@ -133,7 +137,7 @@ class UsersRelationManager extends RelationManager
                             ])
                             ->schema([
                                 DatePicker::make('end_date')
-                                    ->label('End Date')
+                                    ->label(__('labels.end_date'))
                                     ->native(false),
                             ])
                             ->action(function (User $record, array $data): void {

@@ -29,43 +29,52 @@ class EmployeeForm
     {
         return $schema
             ->components([
-                Section::make('Personal Details')
+                Section::make(__('labels.employee.section_personal_details'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('first_name')
+                                    ->label(__('labels.employee.first_name'))
                                     ->required()
                                     ->maxLength(255),
                                 TextInput::make('last_name')
+                                    ->label(__('labels.employee.last_name'))
                                     ->maxLength(255),
                                 Select::make('gender')
+                                    ->label(__('labels.employee.gender'))
                                     ->options([
-                                        1 => 'Male',
-                                        2 => 'Female',
-                                        3 => 'Other',
+                                        1 => __('labels.employee.gender_male'),
+                                        2 => __('labels.employee.gender_female'),
+                                        3 => __('labels.employee.gender_other'),
                                     ])
                                     ->native(false),
                                 DatePicker::make('birth_date')
+                                    ->label(__('labels.employee.birth_date'))
                                     ->native(false),
                                 TextInput::make('nationality')
+                                    ->label(__('labels.employee.nationality'))
                                     ->maxLength(255),
                                 TextInput::make('national_id')
+                                    ->label(__('labels.employee.national_id'))
                                     ->maxLength(255),
                                 TextInput::make('phone')
+                                    ->label(__('labels.phone'))
                                     ->tel(),
                                 TextInput::make('mobile')
+                                    ->label(__('labels.mobile'))
                                     ->tel(),
                                 TextInput::make('email')
+                                    ->label(__('labels.email'))
                                     ->email(),
                             ]),
                     ]),
 
-                Section::make('Employment Details')
+                Section::make(__('labels.employee.section_employment_details'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 Select::make('company_id')
-                                    ->label('Company')
+                                    ->label(__('labels.employee.company'))
                                     ->options(fn () => Company::query()
                                         ->orderBy('legal_name')
                                         ->get()
@@ -76,12 +85,12 @@ class EmployeeForm
                                     ->required()
                                     ->live(),
                                 TextInput::make('employee_code')
-                                    ->label('Employee Code')
+                                    ->label(__('labels.employee.employee_code'))
                                     ->disabled()
                                     ->visible(fn (string $operation): bool => $operation === 'edit')
-                                    ->helperText('Auto-generated on save.'),
+                                    ->helperText(__('labels.employee.employee_code_helper')),
                                 Select::make('department_id')
-                                    ->label('Department')
+                                    ->label(__('labels.employee.department'))
                                     ->options(fn (Get $get): array => Department::query()
                                         ->when(
                                             filled($get('company_id')),
@@ -94,7 +103,7 @@ class EmployeeForm
                                     ->preload()
                                     ->live(),
                                 Select::make('designation_id')
-                                    ->label('Designation')
+                                    ->label(__('labels.employee.designation'))
                                     ->options(fn (Get $get): array => Designation::query()
                                         ->when(
                                             filled($get('department_id')),
@@ -106,18 +115,18 @@ class EmployeeForm
                                     ->searchable()
                                     ->preload(),
                                 Select::make('employment_type_id')
-                                    ->label('Employment Type')
+                                    ->label(__('labels.employee.employment_type'))
                                     ->options(fn () => EmploymentType::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->native(false),
                                 Select::make('employment_status_id')
-                                    ->label('Employment Status')
+                                    ->label(__('labels.employee.employment_status'))
                                     ->options(fn () => EmploymentStatus::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id')->all())
                                     ->default(fn () => EmploymentStatus::where('name', 'Active')->value('id'))
                                     ->searchable()
                                     ->native(false),
                                 Select::make('reporting_to_id')
-                                    ->label('Reports To')
+                                    ->label(__('labels.employee.reports_to'))
                                     ->options(fn (?Employee $record): array => Employee::query()
                                         ->with('person')
                                         ->when($record, fn ($query) => $query->whereKeyNot($record->getKey()))
@@ -127,32 +136,37 @@ class EmployeeForm
                                     ->searchable()
                                     ->preload(),
                                 Select::make('user_id')
-                                    ->label('Linked User Account')
+                                    ->label(__('labels.employee.linked_user_account'))
                                     ->options(fn () => User::query()->orderBy('username')->pluck('username', 'id')->all())
                                     ->searchable()
                                     ->preload(),
                                 Toggle::make('is_manager')
-                                    ->label('Is Manager')
+                                    ->label(__('labels.employee.is_manager'))
                                     ->default(false),
                                 DatePicker::make('joining_date')
+                                    ->label(__('labels.employee.joining_date'))
                                     ->required()
                                     ->native(false)
                                     ->default(now()),
                                 DatePicker::make('confirmation_date')
+                                    ->label(__('labels.employee.confirmation_date'))
                                     ->native(false),
                                 DatePicker::make('end_date')
+                                    ->label(__('labels.end_date'))
                                     ->native(false),
                                 TextInput::make('termination_reason')
+                                    ->label(__('labels.employee.termination_reason'))
                                     ->maxLength(100)
                                     ->visible(fn (Get $get): bool => filled($get('end_date'))),
                             ]),
                         Textarea::make('remarks')
+                            ->label(__('labels.remarks'))
                             ->columnSpanFull()
                             ->rows(3),
                     ]),
 
-                Section::make('Addresses')
-                    ->description('An employee may have more than one address on file, e.g. current and permanent.')
+                Section::make(__('labels.employee.section_addresses'))
+                    ->description(__('labels.employee.addresses_description'))
                     ->schema([
                         Repeater::make('addresses')
                             ->label('')
@@ -161,39 +175,40 @@ class EmployeeForm
                                 Grid::make(2)
                                     ->schema([
                                         Select::make('address_type')
-                                            ->label('Type')
+                                            ->label(__('labels.type'))
                                             ->options(PersonAddress::typeOptions())
                                             ->default(PersonAddress::TYPE_CURRENT)
                                             ->required()
                                             ->native(false),
                                         Toggle::make('is_primary')
-                                            ->label('Primary'),
+                                            ->label(__('labels.primary')),
                                         TextInput::make('address')
-                                            ->label('Address')
+                                            ->label(__('labels.address'))
                                             ->required()
                                             ->maxLength(255)
                                             ->columnSpanFull(),
                                         TextInput::make('location')
-                                            ->label('City / Location')
+                                            ->label(__('labels.employee.city_location'))
                                             ->maxLength(255),
                                         TextInput::make('territory')
-                                            ->label('State / Territory')
+                                            ->label(__('labels.employee.state_territory'))
                                             ->maxLength(255),
                                         TextInput::make('postal_code')
-                                            ->label('Postal Code')
+                                            ->label(__('labels.employee.postal_code'))
                                             ->maxLength(50),
                                         Select::make('country_id')
-                                            ->label('Country')
+                                            ->label(__('labels.country'))
                                             ->options(fn () => Country::query()->orderBy('name')->pluck('name', 'id')->all())
                                             ->searchable()
                                             ->preload(),
                                         TextInput::make('remarks')
+                                            ->label(__('labels.remarks'))
                                             ->maxLength(255)
                                             ->columnSpanFull(),
                                     ]),
                             ])
                             ->itemLabel(fn (array $state): ?string => $state['address_type'] ?? null)
-                            ->addActionLabel('Add address')
+                            ->addActionLabel(__('labels.employee.add_address'))
                             ->collapsible()
                             ->defaultItems(0)
                             ->columnSpanFull(),

@@ -16,22 +16,30 @@ class CountriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('labels.name'))
                     ->searchable(),
                 TextColumn::make('country_code')
+                    ->label(__('labels.country_fields.country_code'))
                     ->searchable(),
                 TextColumn::make('country_code_alpha3')
+                    ->label(__('labels.country_fields.country_code_alpha3'))
                     ->searchable(),
                 TextColumn::make('location_title')
+                    ->label(__('labels.country_fields.location_title'))
                     ->searchable(),
                 TextColumn::make('territory_title')
+                    ->label(__('labels.country_fields.territory_title'))
                     ->searchable(),
                 TextColumn::make('postal_code_title')
+                    ->label(__('labels.country_fields.postal_code_title'))
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -40,8 +48,10 @@ class CountriesTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()
+                    ->tooltip(__('labels.view')),
+                EditAction::make()
+                    ->tooltip(__('labels.edit')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

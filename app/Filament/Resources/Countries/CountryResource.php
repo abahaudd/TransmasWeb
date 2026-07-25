@@ -22,8 +22,13 @@ class CountryResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
-    }     
+        return __('labels.nav.groups.control_panel');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.countries');
+    }
 
     public static function form(Schema $schema): Schema
     {

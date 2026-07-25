@@ -41,46 +41,50 @@ class CustomersTable
                     ->orderByRaw('CASE WHEN parent_id IS NULL THEN 0 ELSE 1 END')
                     ->orderBy('name')
             )
-            ->description('Select customers for assigning sales staff')
+            ->description(__('labels.customer.select_customers_for_assignment'))
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('labels.name'))
                     ->state(function (Customer $record): string {
                         if ($record->parent_id === null) {
                             return e($record->name);
                         }
 
                         return '&nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;' . e($record->name)
-                            . ' <span class="text-xs font-medium text-gray-500">Branch</span>';
+                            . ' <span class="text-xs font-medium text-gray-500">' . e(__('labels.customer.branch_badge')) . '</span>';
                     })
                     ->html()
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('phone_main')
+                    ->label(__('labels.phone'))
                     ->searchable(),
                 TextColumn::make('sales_staff')
-                    ->label('Sales Staff')
+                    ->label(__('labels.customer.sales_staff'))
                     ->state(fn (Customer $record): string => $record->salesStaff
                         ->map(fn (Employee $employee): string => trim(($employee->person?->first_name ?? '') . ' ' . ($employee->person?->last_name ?? '')))
                         ->filter()
                         ->join(', ') ?: '-'),
                 TextColumn::make('created_at')
+                    ->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('sales_staff_id')
-                    ->label('Sales Staff')
+                    ->label(__('labels.customer.sales_staff'))
                     ->options(fn (): array => Employee::query()
                         ->with('person')
                         ->whereHas('user.roles', fn (Builder $query): Builder => $query->where('name', 'sales_staff'))
                         ->get()
                         ->mapWithKeys(fn (Employee $employee): array => [
-                            $employee->id => trim(($employee->person?->first_name ?? '') . ' ' . ($employee->person?->last_name ?? '')) ?: ('Sales Staff #' . $employee->id),
+                            $employee->id => trim(($employee->person?->first_name ?? '') . ' ' . ($employee->person?->last_name ?? '')) ?: __('labels.customer.sales_staff_fallback', ['id' => $employee->id]),
                         ])
                         ->all())
                     ->query(fn (Builder $query, array $data): Builder => $query
@@ -98,14 +102,14 @@ class CustomersTable
             ->recordActions([
                 ViewAction::make()
                     ->iconButton()
-                    ->tooltip('View'),
+                    ->tooltip(__('labels.view')),
                 EditAction::make()
                     ->iconButton()
-                    ->tooltip('Edit'),
+                    ->tooltip(__('labels.edit')),
                 Action::make('createAccount')
                     ->icon('heroicon-o-user-plus')
                     ->iconButton()
-                    ->tooltip('Create Account')
+                    ->tooltip(__('labels.customer.create_account'))
                     ->fillForm(function (Customer $record): array {
                         $existing = User::where('profile_type', Customer::class)
                             ->where('profile_id', $record->id)
@@ -136,12 +140,12 @@ class CustomersTable
                     ->schema([
                         Placeholder::make('account_notice')
                             ->label('')
-                            ->content('This customer has an account')
+                            ->content(__('labels.account_user.has_account_notice'))
                             ->visible(fn (Get $get): bool => (bool) $get('has_account')),
                         Hidden::make('has_account'),
                         Hidden::make('existing_user_id'),
                         TextInput::make('username')
-                            ->label('User ID')
+                            ->label(__('labels.account_user.user_id'))
                             ->required()
                             ->unique(
                                 table: User::class,
@@ -150,24 +154,24 @@ class CustomersTable
                             )
                             ->maxLength(255),
                         TextInput::make('password')
-                            ->label('Password')
+                            ->label(__('labels.password'))
                             ->password()
                             ->revealable()
                             ->required(fn (Get $get): bool => ! (bool) $get('has_account'))
-                            ->helperText(fn (Get $get): ?string => $get('has_account') ? 'Leave blank to keep existing password.' : null)
+                            ->helperText(fn (Get $get): ?string => $get('has_account') ? __('labels.account_user.leave_blank_password') : null)
                             ->maxLength(255),
                         DatePicker::make('start_date')
-                            ->label('Start Date')
+                            ->label(__('labels.start_date'))
                             ->required()
                             ->default(now()),
                         DatePicker::make('end_date')
-                            ->label('End Date')
+                            ->label(__('labels.end_date'))
                             ->required()
                             ->default(fn () => now()->addDays(
                                 (int) Setting::getPayloadValue('customer', 'user_id', 'validity', 365)
                             )),
                         Toggle::make('is_active')
-                            ->label('Account Active')
+                            ->label(__('labels.account_user.account_active'))
                             ->onIcon('heroicon-o-check')
                             ->offIcon('heroicon-o-x-mark')
                             ->default(true)
@@ -195,7 +199,7 @@ class CustomersTable
                             $existing->update($payload);
 
                             Notification::make()
-                                ->title('Account updated successfully.')
+                                ->title(__('messages.account_updated'))
                                 ->success()
                                 ->send();
 
@@ -210,17 +214,17 @@ class CustomersTable
                         $user->assignRole('customer');
 
                         Notification::make()
-                            ->title('Account created successfully.')
+                            ->title(__('messages.account_created'))
                             ->success()
                             ->send();
                     }),
             ])
             ->toolbarActions([
                 BulkAction::make('assignSalesStaff')
-                    ->label('Assign Sales Staff')
+                    ->label(__('labels.customer.assign_sales_staff'))
                     ->icon('heroicon-o-user-group')
-                    ->modalHeading('Assign Sales Staff')
-                    ->modalSubmitActionLabel('Save Assignment')
+                    ->modalHeading(__('labels.customer.assign_sales_staff'))
+                    ->modalSubmitActionLabel(__('labels.customer.save_assignment'))
                     ->deselectRecordsAfterCompletion()
                     ->schema(function (BulkAction $action): array {
                             $selectedCustomerIds = $action->getSelectedRecords()
@@ -271,14 +275,14 @@ class CustomersTable
 
                             return [
                                 Select::make('employee_id')
-                                    ->label('Sales Staff')
+                                    ->label(__('labels.customer.sales_staff'))
                                     ->required()
                                     ->options(fn (): array => Employee::query()
                                         ->with('person')
                                         ->whereHas('user.roles', fn (Builder $query): Builder => $query->where('name', 'sales_staff'))
                                         ->get()
                                         ->mapWithKeys(fn (Employee $employee): array => [
-                                            $employee->id => trim(($employee->person?->first_name ?? '') . ' ' . ($employee->person?->last_name ?? '')) ?: ('Sales Staff #' . $employee->id),
+                                            $employee->id => trim(($employee->person?->first_name ?? '') . ' ' . ($employee->person?->last_name ?? '')) ?: __('labels.customer.sales_staff_fallback', ['id' => $employee->id]),
                                         ])
                                         ->all())
                                     ->searchable()
@@ -289,8 +293,8 @@ class CustomersTable
                                     })
                                     ->native(false),
                                 CheckboxList::make('customer_ids')
-                                    ->label('Assigned Customers')
-                                    ->helperText('Uncheck customers to remove them from this sales staff member.')
+                                    ->label(__('labels.customer.assigned_customers'))
+                                    ->helperText(__('labels.customer.uncheck_to_remove'))
                                     ->options(fn (Get $get): array => $customerOptions(filled($get('employee_id')) ? (int) $get('employee_id') : null))
                                     ->default($selectedCustomerIds)
                                     ->columns(1)
@@ -315,7 +319,7 @@ class CustomersTable
                             });
 
                             Notification::make()
-                                ->title('Sales staff customer assignments updated.')
+                                ->title(__('messages.sales_staff_assignments_updated'))
                                 ->success()
                                 ->send();
                     }),

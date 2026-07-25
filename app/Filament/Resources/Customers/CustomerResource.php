@@ -60,7 +60,12 @@ class CustomerResource extends Resource
      */
     public static function getNavigationGroup(): ?string
     {
-        return 'Customer Management';
+        return __('labels.nav.groups.customer_management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.customers');
     }
 
     /**

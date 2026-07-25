@@ -31,37 +31,40 @@ class SequenceNumberFormatResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
+        return __('labels.nav.groups.control_panel');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Sequence Number Formats';
+        return __('labels.nav.sequence_number_formats');
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('category')
-                ->helperText('e.g. invoice, receipt, employee — the key code passed to SequenceNumberService::next().')
+                ->label(__('labels.sequence_number_format.category'))
+                ->helperText(__('labels.sequence_number_format.category_helper'))
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(200),
             TextInput::make('prefix')
+                ->label(__('labels.sequence_number_format.prefix'))
                 ->maxLength(200),
             TextInput::make('separator')
+                ->label(__('labels.sequence_number_format.separator'))
                 ->maxLength(50)
                 ->default('-'),
             TextInput::make('incrementer')
-                ->label('Current Number')
-                ->helperText('The last number issued. The next call to next() returns this value + 1.')
+                ->label(__('labels.sequence_number_format.current_number'))
+                ->helperText(__('labels.sequence_number_format.current_number_helper'))
                 ->numeric()
                 ->minValue(0)
                 ->default(0)
                 ->required(),
             TextInput::make('length')
-                ->label('Zero-pad Length')
-                ->helperText('Total digit width of the numeric part, zero-padded. Leave blank for no padding.')
+                ->label(__('labels.sequence_number_format.zero_pad_length'))
+                ->helperText(__('labels.sequence_number_format.zero_pad_length_helper'))
                 ->numeric()
                 ->minValue(1),
         ]);
@@ -72,20 +75,23 @@ class SequenceNumberFormatResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('category')
+                    ->label(__('labels.sequence_number_format.category'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('prefix')
+                    ->label(__('labels.sequence_number_format.prefix'))
                     ->placeholder('-'),
                 TextColumn::make('separator')
+                    ->label(__('labels.sequence_number_format.separator'))
                     ->placeholder('-'),
                 TextColumn::make('incrementer')
-                    ->label('Current Number')
+                    ->label(__('labels.sequence_number_format.current_number'))
                     ->sortable(),
                 TextColumn::make('length')
-                    ->label('Zero-pad Length')
+                    ->label(__('labels.sequence_number_format.zero_pad_length'))
                     ->placeholder('-'),
                 TextColumn::make('next_preview')
-                    ->label('Next Number Preview')
+                    ->label(__('labels.sequence_number_format.next_number_preview'))
                     ->state(fn (SequenceNumberFormat $record): string => app(SequenceNumberService::class)
                         ->current($record->category) ?? '-'),
             ])

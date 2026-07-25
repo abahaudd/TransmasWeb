@@ -11,23 +11,23 @@ class DashboardStats extends StatsOverviewWidget
     {
         return [
 
-            Stat::make('Properties', '125')
-                ->description('8 added this month')
+            Stat::make(__('labels.widgets.properties'), '125')
+                ->description(__('labels.widgets.properties_description', ['count' => 8]))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
 
-            Stat::make('Tenants', '1,248')
-                ->description('97% occupied')
+            Stat::make(__('labels.widgets.tenants'), '1,248')
+                ->description(__('labels.widgets.tenants_description', ['percent' => 97]))
                 ->descriptionIcon('heroicon-m-home')
                 ->color('primary'),
 
-            Stat::make('Outstanding Rent', 'AED 1.28M')
-                ->description('18 overdue')
+            Stat::make(__('labels.widgets.outstanding_rent'), 'AED 1.28M')
+                ->description(__('labels.widgets.outstanding_rent_description', ['count' => 18]))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('warning'),
 
-            Stat::make('Maintenance', '32')
-                ->description('7 urgent')
+            Stat::make(__('labels.widgets.maintenance'), '32')
+                ->description(__('labels.widgets.maintenance_description', ['count' => 7]))
                 ->descriptionIcon('heroicon-m-wrench-screwdriver')
                 ->color('danger'),
 

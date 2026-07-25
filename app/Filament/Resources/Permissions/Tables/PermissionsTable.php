@@ -16,14 +16,18 @@ class PermissionsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('labels.name'))
                     ->searchable(),
                 TextColumn::make('guard_name')
+                    ->label(__('labels.permission.guard_name'))
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label(__('labels.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('labels.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -32,8 +36,10 @@ class PermissionsTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()
+                    ->tooltip(__('labels.view')),
+                EditAction::make()
+                    ->tooltip(__('labels.edit')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

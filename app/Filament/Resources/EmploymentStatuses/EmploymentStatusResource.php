@@ -32,21 +32,28 @@ class EmploymentStatusResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'HR Management';
+        return __('labels.nav.groups.hr_management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.employment_statuses');
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')
+                ->label(__('labels.name'))
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(50),
             Toggle::make('is_terminal')
-                ->label('Ends employment')
-                ->helperText('e.g. Resigned, Terminated, Retired, Deceased — excluded from active headcount.')
+                ->label(__('labels.employment_status.ends_employment'))
+                ->helperText(__('labels.employment_status.ends_employment_helper'))
                 ->default(false),
             Toggle::make('is_active')
+                ->label(__('labels.active'))
                 ->default(true),
         ]);
     }
@@ -56,13 +63,15 @@ class EmploymentStatusResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('labels.name'))
                     ->searchable()
                     ->sortable(),
                 IconColumn::make('is_terminal')
-                    ->label('Ends employment')
+                    ->label(__('labels.employment_status.ends_employment'))
                     ->boolean()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label(__('labels.active'))
                     ->boolean()
                     ->sortable(),
             ])

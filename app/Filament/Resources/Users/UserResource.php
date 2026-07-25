@@ -22,8 +22,13 @@ class UserResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Administration';
-    }   
+        return __('labels.nav.groups.administration');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.users');
+    }
 
     public static function form(Schema $schema): Schema
     {

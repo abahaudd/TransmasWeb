@@ -22,19 +22,20 @@ class RecentActivity extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Recent Activity')
+            ->heading(__('labels.widgets.recent_activity'))
             ->query(Activity::query()->latest()->limit(10))
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('When')
+                    ->label(__('labels.widgets.when'))
                     ->since(),
                 TextColumn::make('log_name')
-                    ->label('Log')
+                    ->label(__('labels.widgets.log'))
                     ->badge(),
-                TextColumn::make('description'),
+                TextColumn::make('description')
+                    ->label(__('labels.activity_log.description')),
                 TextColumn::make('causer.username')
-                    ->label('By')
-                    ->default('System'),
+                    ->label(__('labels.widgets.by'))
+                    ->default(__('labels.activity_log.system')),
             ])
             ->paginated(false);
     }

@@ -40,7 +40,12 @@ class CompanyResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
+        return __('labels.nav.groups.control_panel');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.companies');
     }
 
     public static function form(Schema $schema): Schema

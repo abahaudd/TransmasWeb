@@ -18,12 +18,16 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PhonesRelationManager extends RelationManager
 {
     protected static string $relationship = 'phones';
 
-    protected static ?string $title = 'Phones';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('labels.phone_record.section_title');
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -31,26 +35,31 @@ class PhonesRelationManager extends RelationManager
             Grid::make(2)
                 ->schema([
                     Select::make('phone_type')
-                        ->label('Type')
+                        ->label(__('labels.phone_record.type'))
                         ->options(Phone::typeOptions())
                         ->required()
                         ->native(false),
                     TextInput::make('contact_name')
+                        ->label(__('labels.phone_record.contact_name'))
                         ->maxLength(100),
                     TextInput::make('country_code')
+                        ->label(__('labels.phone_record.country_code'))
                         ->maxLength(10)
                         ->placeholder('+971'),
                     TextInput::make('phone_number')
+                        ->label(__('labels.phone_record.phone_number'))
                         ->required()
                         ->maxLength(30)
                         ->tel(),
                     TextInput::make('extension')
+                        ->label(__('labels.phone_record.extension'))
                         ->maxLength(10),
                     Toggle::make('is_primary')
-                        ->label('Primary')
+                        ->label(__('labels.primary'))
                         ->default(false),
                 ]),
             TextInput::make('remarks')
+                ->label(__('labels.remarks'))
                 ->maxLength(255)
                 ->columnSpanFull(),
         ]);
@@ -62,26 +71,30 @@ class PhonesRelationManager extends RelationManager
             ->recordTitleAttribute('phone_number')
             ->columns([
                 TextColumn::make('phone_type')
-                    ->label('Type')
+                    ->label(__('labels.phone_record.type'))
                     ->badge(),
                 TextColumn::make('country_code')
-                    ->label('Country Code'),
+                    ->label(__('labels.phone_record.country_code')),
                 TextColumn::make('phone_number')
+                    ->label(__('labels.phone_record.phone_number'))
                     ->searchable(),
                 TextColumn::make('extension')
+                    ->label(__('labels.phone_record.extension'))
                     ->placeholder('-'),
                 TextColumn::make('contact_name')
+                    ->label(__('labels.phone_record.contact_name'))
                     ->placeholder('-'),
                 IconColumn::make('is_primary')
-                    ->label('Primary')
+                    ->label(__('labels.primary'))
                     ->boolean(),
                 TextColumn::make('remarks')
+                    ->label(__('labels.remarks'))
                     ->placeholder('-')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('phone_type')
-                    ->label('Type')
+                    ->label(__('labels.phone_record.type'))
                     ->options(Phone::typeOptions()),
             ])
             ->headerActions([

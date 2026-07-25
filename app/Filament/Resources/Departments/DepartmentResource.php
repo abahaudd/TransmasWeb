@@ -34,15 +34,20 @@ class DepartmentResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'HR Management';
+        return __('labels.nav.groups.hr_management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.departments');
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             Select::make('company_id')
-                ->label('Company')
-                ->helperText('Leave empty to make this department available to every company.')
+                ->label(__('labels.department.company'))
+                ->helperText(__('labels.department.company_helper'))
                 ->options(fn () => Company::query()
                     ->orderBy('legal_name')
                     ->get()
@@ -51,11 +56,14 @@ class DepartmentResource extends Resource
                 ->searchable()
                 ->preload(),
             TextInput::make('name')
+                ->label(__('labels.name'))
                 ->required()
                 ->maxLength(150),
             TextInput::make('code')
+                ->label(__('labels.code'))
                 ->maxLength(20),
             Toggle::make('is_active')
+                ->label(__('labels.active'))
                 ->default(true),
         ]);
     }
@@ -65,14 +73,17 @@ class DepartmentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('labels.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('code')
+                    ->label(__('labels.code'))
                     ->placeholder('-'),
                 TextColumn::make('company.legal_name')
-                    ->label('Company')
-                    ->placeholder('All companies'),
+                    ->label(__('labels.department.company'))
+                    ->placeholder(__('labels.department.all_companies')),
                 IconColumn::make('is_active')
+                    ->label(__('labels.active'))
                     ->boolean()
                     ->sortable(),
             ])

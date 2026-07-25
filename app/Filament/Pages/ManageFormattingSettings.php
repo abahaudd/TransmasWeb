@@ -14,13 +14,19 @@ class ManageFormattingSettings extends SettingsPage
 {
     use InteractsWithSettingsGroup;
 
-    protected static ?string $title = 'Formatting Settings';
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.formatting_settings');
+    }
 
-    protected static ?string $navigationLabel = 'Formatting Settings';
+    public function getTitle(): string
+    {
+        return __('labels.nav.formatting_settings');
+    }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
+        return __('labels.nav.groups.control_panel');
     }
 
     public static function canAccess(): bool
@@ -37,34 +43,34 @@ class ManageFormattingSettings extends SettingsPage
     {
         return $schema
             ->components([
-                Section::make('Currency')
-                    ->description('Controls how monetary amounts are displayed app-wide via the Format helper.')
+                Section::make(__('labels.settings.formatting.section_currency'))
+                    ->description(__('labels.settings.formatting.section_currency_description'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('currency_symbol')
-                                    ->label('Currency symbol')
+                                    ->label(__('labels.settings.formatting.currency_symbol'))
                                     ->required()
                                     ->maxLength(20)
-                                    ->helperText('The official new AED symbol (U+20C3) can be pasted here once your system font supports it; plain "AED" is used until then.'),
+                                    ->helperText(__('labels.settings.formatting.currency_symbol_helper')),
                                 Select::make('currency_symbol_position')
-                                    ->label('Symbol position')
+                                    ->label(__('labels.settings.formatting.symbol_position'))
                                     ->options([
-                                        'before' => 'Before amount (AED 1,234.50)',
-                                        'after' => 'After amount (1,234.50 AED)',
+                                        'before' => __('labels.settings.formatting.symbol_position_before'),
+                                        'after' => __('labels.settings.formatting.symbol_position_after'),
                                     ])
                                     ->required()
                                     ->native(false),
                                 TextInput::make('thousands_separator')
-                                    ->label('Thousands separator')
+                                    ->label(__('labels.settings.formatting.thousands_separator'))
                                     ->maxLength(1)
                                     ->required(),
                                 TextInput::make('decimal_separator')
-                                    ->label('Decimal separator')
+                                    ->label(__('labels.settings.formatting.decimal_separator'))
                                     ->maxLength(1)
                                     ->required(),
                                 TextInput::make('decimal_places')
-                                    ->label('Decimal places')
+                                    ->label(__('labels.settings.formatting.decimal_places'))
                                     ->numeric()
                                     ->minValue(0)
                                     ->maxValue(6)
@@ -72,11 +78,11 @@ class ManageFormattingSettings extends SettingsPage
                             ]),
                     ])
                     ->columnSpanFull(),
-                Section::make('Date')
-                    ->description('Controls how dates are displayed app-wide via the Format helper.')
+                Section::make(__('labels.settings.formatting.section_date'))
+                    ->description(__('labels.settings.formatting.section_date_description'))
                     ->schema([
                         Select::make('date_format')
-                            ->label('Date format')
+                            ->label(__('labels.settings.formatting.date_format'))
                             ->options(fn (): array => collect([
                                 'd/m/Y',
                                 'm/d/Y',

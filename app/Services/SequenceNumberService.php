@@ -25,7 +25,7 @@ class SequenceNumberService
                 ->first();
 
             if (! $format) {
-                throw new RuntimeException("No sequence number format configured for category [{$category}].");
+                throw new RuntimeException(__('errors.sequence_number.format_not_configured', ['category' => $category]));
             }
 
             $format->incrementer += 1;

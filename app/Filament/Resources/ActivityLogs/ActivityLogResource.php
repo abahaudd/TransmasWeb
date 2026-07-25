@@ -15,15 +15,26 @@ class ActivityLogResource extends Resource
 {
     protected static ?string $model = Activity::class;
 
-    protected static ?string $modelLabel = 'Activity Log';
-
-    protected static ?string $pluralModelLabel = 'Activity Logs';
-
     protected static ?string $slug = 'activity-logs';
+
+    public static function getModelLabel(): string
+    {
+        return __('labels.activity_log.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('labels.nav.activity_logs');
+    }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Administration';
+        return __('labels.nav.groups.administration');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.activity_logs');
     }
 
     public static function infolist(Schema $schema): Schema

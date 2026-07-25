@@ -28,50 +28,51 @@ class EmployeesTable
             ]))
             ->columns([
                 TextColumn::make('employee_code')
-                    ->label('Code')
+                    ->label(__('labels.employee.employee_code'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('person.full_name')
-                    ->label('Name')
+                    ->label(__('labels.name'))
                     ->searchable(['first_name', 'last_name'])
                     ->sortable(),
                 TextColumn::make('company.legal_name')
-                    ->label('Company')
+                    ->label(__('labels.employee.company'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('department.name')
-                    ->label('Department')
+                    ->label(__('labels.employee.department'))
                     ->placeholder('-')
                     ->toggleable(),
                 TextColumn::make('designation.title')
-                    ->label('Designation')
+                    ->label(__('labels.employee.designation'))
                     ->placeholder('-')
                     ->toggleable(),
                 TextColumn::make('employmentType.name')
-                    ->label('Type')
+                    ->label(__('labels.employee.employment_type'))
                     ->badge()
                     ->placeholder('-'),
                 TextColumn::make('employmentStatus.name')
-                    ->label('Status')
+                    ->label(__('labels.employee.employment_status'))
                     ->badge()
                     ->color(fn (?Employee $record): string => $record?->employmentStatus?->is_terminal ? 'danger' : 'success')
                     ->placeholder('-'),
                 IconColumn::make('is_manager')
-                    ->label('Manager')
+                    ->label(__('labels.employee.is_manager'))
                     ->boolean()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('reportingTo.person.full_name')
-                    ->label('Reports To')
+                    ->label(__('labels.employee.reports_to'))
                     ->placeholder('-')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('joining_date')
+                    ->label(__('labels.employee.joining_date'))
                     ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('company_id')
-                    ->label('Company')
+                    ->label(__('labels.employee.company'))
                     ->options(fn () => Company::query()
                         ->orderBy('legal_name')
                         ->get()
@@ -79,25 +80,25 @@ class EmployeesTable
                         ->all())
                     ->searchable(),
                 SelectFilter::make('department_id')
-                    ->label('Department')
+                    ->label(__('labels.employee.department'))
                     ->options(fn () => Department::query()->orderBy('name')->pluck('name', 'id')->all())
                     ->searchable(),
                 SelectFilter::make('employment_type_id')
-                    ->label('Employment Type')
+                    ->label(__('labels.employee.employment_type'))
                     ->options(fn () => EmploymentType::query()->orderBy('name')->pluck('name', 'id')->all()),
                 SelectFilter::make('employment_status_id')
-                    ->label('Employment Status')
+                    ->label(__('labels.employee.employment_status'))
                     ->options(fn () => EmploymentStatus::query()->orderBy('name')->pluck('name', 'id')->all()),
                 TernaryFilter::make('is_manager')
-                    ->label('Is Manager'),
+                    ->label(__('labels.employee.is_manager')),
             ])
             ->recordActions([
                 ViewAction::make()
                     ->iconButton()
-                    ->tooltip('View'),
+                    ->tooltip(__('labels.view')),
                 EditAction::make()
                     ->iconButton()
-                    ->tooltip('Edit'),
+                    ->tooltip(__('labels.edit')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

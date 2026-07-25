@@ -13,32 +13,34 @@ class ActivityLogInfolist
     {
         return $schema
             ->components([
-                Section::make('Activity')
+                Section::make(__('labels.activity_log.section_activity'))
                     ->schema([
                         TextEntry::make('created_at')
-                            ->label('When')
+                            ->label(__('labels.activity_log.when'))
                             ->dateTime(),
                         TextEntry::make('log_name')
-                            ->label('Log')
+                            ->label(__('labels.activity_log.log'))
                             ->badge(),
                         TextEntry::make('event')
+                            ->label(__('labels.activity_log.event'))
                             ->badge(),
-                        TextEntry::make('description'),
+                        TextEntry::make('description')
+                            ->label(__('labels.activity_log.description')),
                         TextEntry::make('subject_type')
-                            ->label('Subject')
+                            ->label(__('labels.activity_log.subject'))
                             ->formatStateUsing(fn (?string $state, Activity $record): string => $state
                                 ? class_basename($state).' #'.$record->subject_id
                                 : '-'),
                         TextEntry::make('causer.username')
-                            ->label('By')
-                            ->default('System'),
+                            ->label(__('labels.activity_log.by'))
+                            ->default(__('labels.activity_log.system')),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
-                Section::make('Changes')
+                Section::make(__('labels.activity_log.section_changes'))
                     ->schema([
                         TextEntry::make('properties')
-                            ->label('Recorded properties')
+                            ->label(__('labels.activity_log.recorded_properties'))
                             ->state(fn (Activity $record): string => json_encode(
                                 $record->properties,
                                 JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE

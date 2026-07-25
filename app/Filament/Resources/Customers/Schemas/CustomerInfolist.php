@@ -11,15 +11,20 @@ class CustomerInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
+                TextEntry::make('name')
+                    ->label(__('labels.name')),
                 TextEntry::make('address.address')
-                    ->label('Address'),
-                TextEntry::make('phone_main'),
-                TextEntry::make('phone_secondary'),
-                TextEntry::make('email'),
-                TextEntry::make('website'),
+                    ->label(__('labels.address')),
+                TextEntry::make('phone_main')
+                    ->label(__('labels.phone')),
+                TextEntry::make('phone_secondary')
+                    ->label(__('labels.mobile')),
+                TextEntry::make('email')
+                    ->label(__('labels.email')),
+                TextEntry::make('website')
+                    ->label(__('labels.website')),
                 TextEntry::make('parent.name')
-                    ->label('Parent customer'),
+                    ->label(__('labels.customer.parent_customer')),
             ]);
     }
 }

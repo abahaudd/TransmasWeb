@@ -21,9 +21,9 @@ class AdminStatsOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Users', User::count()),
-            Stat::make('Roles', Role::count()),
-            Stat::make('Activity (24h)', Activity::where('created_at', '>=', now()->subDay())->count()),
+            Stat::make(__('labels.widgets.users'), User::count()),
+            Stat::make(__('labels.widgets.roles'), Role::count()),
+            Stat::make(__('labels.widgets.activity_24h'), Activity::where('created_at', '>=', now()->subDay())->count()),
         ];
     }
 }

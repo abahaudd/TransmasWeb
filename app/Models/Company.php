@@ -166,7 +166,7 @@ class Company extends Model
 
         if (! self::query()->whereKey($parentId)->exists()) {
             throw ValidationException::withMessages([
-                'parent_id' => 'Selected parent company is invalid.',
+                'parent_id' => __('errors.company.invalid_parent'),
             ]);
         }
 
@@ -176,13 +176,13 @@ class Company extends Model
 
         if ($parentId === (int) $this->getKey()) {
             throw ValidationException::withMessages([
-                'parent_id' => 'A company cannot be its own parent.',
+                'parent_id' => __('errors.company.self_parent'),
             ]);
         }
 
         if (in_array($parentId, $this->getDescendantIds(), true)) {
             throw ValidationException::withMessages([
-                'parent_id' => 'Invalid parent company. You cannot assign a child company/branch as parent.',
+                'parent_id' => __('errors.company.circular_parent'),
             ]);
         }
     }

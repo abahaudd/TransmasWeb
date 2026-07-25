@@ -15,7 +15,7 @@ class EditCmsPage extends EditRecord
     {
         return [
             Action::make('preview')
-                ->label('View page')
+                ->label(__('labels.cms_page.view_page'))
                 ->url(fn (): string => url('/'.($this->getRecord()->slug === 'home' ? '' : $this->getRecord()->slug)), shouldOpenInNewTab: true),
             DeleteAction::make(),
         ];

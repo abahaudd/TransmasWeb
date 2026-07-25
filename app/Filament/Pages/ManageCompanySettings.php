@@ -16,13 +16,19 @@ class ManageCompanySettings extends SettingsPage
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected static ?string $title = 'Company Settings';
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.company_settings');
+    }
 
-    protected static ?string $navigationLabel = 'Company Settings';
+    public function getTitle(): string
+    {
+        return __('labels.nav.company_settings');
+    }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Control Panel';
+        return __('labels.nav.groups.control_panel');
     }
 
     public static function canAccess(): bool
@@ -39,33 +45,37 @@ class ManageCompanySettings extends SettingsPage
     {
         return $schema
             ->components([
-                Section::make('Identity')
-                    ->description('Shown in the public site header and footer.')
+                Section::make(__('labels.settings.company.section_identity'))
+                    ->description(__('labels.settings.company.section_identity_description'))
                     ->schema([
                         TextInput::make('company_name')
-                            ->label('Company name')
+                            ->label(__('labels.settings.company.company_name'))
                             ->required()
                             ->maxLength(255),
                         FileUpload::make('logo_path')
-                            ->label('Logo')
+                            ->label(__('labels.settings.company.logo'))
                             ->image()
                             ->disk('public')
                             ->directory('branding')
                             ->imageEditor()
-                            ->helperText('Displayed in the site navigation next to the company name.'),
+                            ->helperText(__('labels.settings.company.logo_helper')),
                     ])
                     ->columnSpanFull(),
-                Section::make('Contact details')
-                    ->description('Shown in the public site footer.')
+                Section::make(__('labels.settings.company.section_contact'))
+                    ->description(__('labels.settings.company.section_contact_description'))
                     ->schema([
                         Textarea::make('address')
+                            ->label(__('labels.address'))
                             ->rows(2)
                             ->columnSpanFull(),
                         TextInput::make('phone')
+                            ->label(__('labels.phone'))
                             ->tel(),
                         TextInput::make('email')
+                            ->label(__('labels.email'))
                             ->email(),
                         TextInput::make('website')
+                            ->label(__('labels.website'))
                             ->url(),
                     ])
                     ->columns(3)

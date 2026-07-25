@@ -12,7 +12,7 @@ class EditProfile extends BaseEditProfile
     protected function getNameFormComponent(): Component
     {
         return TextInput::make('username')
-            ->label('Username')
+            ->label(__('labels.auth.username'))
             ->required()
             ->maxLength(255)
             ->unique(ignoreRecord: true);

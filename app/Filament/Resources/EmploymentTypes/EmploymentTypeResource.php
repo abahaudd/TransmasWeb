@@ -32,17 +32,24 @@ class EmploymentTypeResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'HR Management';
+        return __('labels.nav.groups.hr_management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('labels.nav.employment_types');
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')
+                ->label(__('labels.name'))
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(50),
             Toggle::make('is_active')
+                ->label(__('labels.active'))
                 ->default(true),
         ]);
     }
@@ -52,9 +59,11 @@ class EmploymentTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('labels.name'))
                     ->searchable()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label(__('labels.active'))
                     ->boolean()
                     ->sortable(),
             ])

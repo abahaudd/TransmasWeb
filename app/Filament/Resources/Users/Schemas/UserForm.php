@@ -13,14 +13,17 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('username')
+                    ->label(__('labels.username'))
                     ->required()
                     ->unique(ignoreRecord: true),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('labels.email_address'))
                     ->email()
                     ->required(),
-                DateTimePicker::make('email_verified_at'),
+                DateTimePicker::make('email_verified_at')
+                    ->label(__('labels.user.email_verified_at')),
                 TextInput::make('password')
+                    ->label(__('labels.password'))
                     ->password()
                     ->required(),
             ]);
