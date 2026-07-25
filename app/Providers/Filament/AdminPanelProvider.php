@@ -7,6 +7,7 @@ use App\Filament\Auth\Login;
 use App\Filament\Auth\Register;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Widgets\Stats\DashboardStats;
+use App\Services\SettingsService;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
@@ -42,11 +43,16 @@ class AdminPanelProvider extends PanelProvider
                 AppAuthentication::make()->recoverable(),
             ])
             ->databaseNotifications()
+            ->brandName(fn () => app(SettingsService::class)->get('general', 'site_name', config('app.name')))
+            ->brandLogo(fn () => app(SettingsService::class)->companyLogoUrl())
+            ->brandLogoHeight('2rem')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
                 NavigationGroup::make('CMS')->icon('heroicon-o-newspaper'),
+                NavigationGroup::make('Customer Management')->icon('heroicon-o-user-group'),
+                NavigationGroup::make('HR Management')->icon('heroicon-o-briefcase'),
                 NavigationGroup::make('Control Panel')->icon('heroicon-o-adjustments-horizontal'),
                 NavigationGroup::make('Administration')->icon('heroicon-o-shield-check'),
             ])

@@ -9,6 +9,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -97,6 +98,25 @@ class CompanyForm
                                     ->prefixIcon('heroicon-o-calendar'),
                                 DatePicker::make('financial_year_start')
                                     ->native(false)
+                                    ->prefixIcon('heroicon-o-calendar-days'),
+                            ]),
+                    ]),
+
+                Section::make('Working Hours')
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                TimePicker::make('start_work_hour')
+                                    ->seconds(false)
+                                    ->native(false)
+                                    ->prefixIcon('heroicon-o-clock'),
+                                TimePicker::make('end_work_hour')
+                                    ->seconds(false)
+                                    ->native(false)
+                                    ->prefixIcon('heroicon-o-clock'),
+                                TextInput::make('weekends')
+                                    ->maxLength(100)
+                                    ->placeholder('e.g. Saturday, Sunday')
                                     ->prefixIcon('heroicon-o-calendar-days'),
                             ]),
                     ]),

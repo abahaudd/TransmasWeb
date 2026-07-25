@@ -17,10 +17,12 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->integer('gender')->nullable();
             $table->date('birth_date')->nullable();
-            $table->string('nationality')->nullable();
-            $table->string('national_id')->nullable();
+            $table->string('nationality')->nullable();            
+            $table->string('national_id')->nullable();            
             $table->string('phone')->nullable();
+            $table->string('mobile')->nullable();
             $table->string('email')->nullable();
+            $table->string('blood_group')->nullable();
             $table->foreignId('address_id')
                 ->nullable()
                 ->constrained('addresses')

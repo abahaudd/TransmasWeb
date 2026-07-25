@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             AdminUserSeeder::class,
             CmsPageSeeder::class,
+            EmploymentLookupSeeder::class,
+            SequenceNumberFormatSeeder::class,
+            FormattingSettingsSeeder::class,
         ]);
     }
 }

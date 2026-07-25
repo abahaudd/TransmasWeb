@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pages;
 
-use App\Settings\CompanySettings;
-use App\Settings\GeneralSettings;
+use App\Filament\Pages\Concerns\InteractsWithSettingsGroup;
+use App\Services\SettingsService;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -14,7 +14,7 @@ use Filament\Schemas\Schema;
 
 class ManageGeneralSettings extends SettingsPage
 {
-    protected static string $settings = GeneralSettings::class;
+    use InteractsWithSettingsGroup;
 
     protected static ?string $title = 'Site Settings';
 
@@ -30,33 +30,35 @@ class ManageGeneralSettings extends SettingsPage
         return auth()->user()?->isSuperAdmin() ?? false;
     }
 
+    protected function settingsGroup(): string
+    {
+        return 'general';
+    }
+
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $companySettings = app(CompanySettings::class);
+        $companyData = app(SettingsService::class)->getGroup('company');
 
         return array_merge($data, [
-            'company_name' => $companySettings->company_name,
-            'logo_path' => $companySettings->logo_path,
-            'address' => $companySettings->address,
-            'phone' => $companySettings->phone,
-            'email' => $companySettings->email,
-            'website' => $companySettings->website,
+            'company_name' => $companyData['company_name'] ?? null,
+            'logo_path' => $companyData['logo_path'] ?? null,
+            'address' => $companyData['address'] ?? null,
+            'phone' => $companyData['phone'] ?? null,
+            'email' => $companyData['email'] ?? null,
+            'website' => $companyData['website'] ?? null,
         ]);
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $companySettings = app(CompanySettings::class);
-
-        $companySettings->fill([
-            'company_name' => $data['company_name'] ?? $companySettings->company_name,
+        app(SettingsService::class)->setMany('company', [
+            'company_name' => $data['company_name'] ?? null,
             'logo_path' => $data['logo_path'] ?? null,
             'address' => $data['address'] ?? null,
             'phone' => $data['phone'] ?? null,
             'email' => $data['email'] ?? null,
             'website' => $data['website'] ?? null,
         ]);
-        $companySettings->save();
 
         unset(
             $data['company_name'],

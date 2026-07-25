@@ -36,6 +36,9 @@ class Company extends Model
         'currency_id',
         'language_id',
         'timezone',
+        'start_work_hour',
+        'end_work_hour',
+        'weekends',
         'incorporation_date',
         'financial_year_start',
         'logo',
@@ -114,6 +117,11 @@ class Company extends Model
     public function governmentRegistrations(): HasMany
     {
         return $this->hasMany(GovernmentRegistration::class);
+    }
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
     }
 
     /**

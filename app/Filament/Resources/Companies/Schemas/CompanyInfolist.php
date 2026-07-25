@@ -61,6 +61,23 @@ class CompanyInfolist
                             ]),
                     ]),
 
+                Section::make('Working Hours')
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                TextEntry::make('start_work_hour')
+                                    ->label('Start')
+                                    ->time()
+                                    ->placeholder('-'),
+                                TextEntry::make('end_work_hour')
+                                    ->label('End')
+                                    ->time()
+                                    ->placeholder('-'),
+                                TextEntry::make('weekends')
+                                    ->placeholder('-'),
+                            ]),
+                    ]),
+
                 Section::make('Branding & Notes')
                     ->schema([
                         ImageEntry::make('logo')

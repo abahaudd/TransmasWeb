@@ -47,6 +47,19 @@ class CompaniesTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('website')
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('start_work_hour')
+                    ->label('Start')
+                    ->time()
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('end_work_hour')
+                    ->label('End')
+                    ->time()
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('weekends')
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

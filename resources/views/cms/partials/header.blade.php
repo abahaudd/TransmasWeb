@@ -13,11 +13,10 @@
         fn () => \App\Models\Setting::where('group', 'company')->where('name', 'details')->first()?->payload ?? []
     );
 
-    $companySettings = app(\App\Settings\CompanySettings::class);
-    $generalSettings = app(\App\Settings\GeneralSettings::class);
-    $companyLogoUrl = $companySettings->logoUrl() ?: asset('images/logo.png');
+    $settingsService = app(\App\Services\SettingsService::class);
+    $companyLogoUrl = $settingsService->companyLogoUrl() ?: asset('images/logo.png');
 
-    $companyName = (string) ($generalSettings->site_name ?? config('app.name', 'Company'));
+    $companyName = (string) ($settingsService->get('general', 'site_name') ?? config('app.name', 'Company'));
     $companySubtitle = (string) ($companyDetails['tagline'] ?? 'Business Solutions');
 
     $user = auth()->user();

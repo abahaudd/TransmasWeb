@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use App\Settings\CompanySettings;
+use App\Filament\Pages\Concerns\InteractsWithSettingsGroup;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -12,9 +12,9 @@ use Filament\Schemas\Schema;
 
 class ManageCompanySettings extends SettingsPage
 {
-    protected static bool $shouldRegisterNavigation = false;
+    use InteractsWithSettingsGroup;
 
-    protected static string $settings = CompanySettings::class;
+    protected static bool $shouldRegisterNavigation = false;
 
     protected static ?string $title = 'Company Settings';
 
@@ -28,6 +28,11 @@ class ManageCompanySettings extends SettingsPage
     public static function canAccess(): bool
     {
         return auth()->user()?->isSuperAdmin() ?? false;
+    }
+
+    protected function settingsGroup(): string
+    {
+        return 'company';
     }
 
     public function form(Schema $schema): Schema

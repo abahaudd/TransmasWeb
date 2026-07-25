@@ -1,7 +1,5 @@
 <?php
 
-use App\Settings\CompanySettings;
-use App\Settings\GeneralSettings;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelSettings\SettingsCasts\DataCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
@@ -16,8 +14,7 @@ return [
      * put them (manually) here.
      */
     'settings' => [
-        GeneralSettings::class,
-        CompanySettings::class,
+        //
     ],
 
     /*

@@ -237,7 +237,7 @@ class UserService
 
         if ($existingBranchEmployee) {
             $existingBranchEmployee->update([
-                'branch_id' => (int) Arr::get($data, 'branch_id'),
+                'company_id' => (int) Arr::get($data, 'company_id'),
                 'person_id' => $person->getKey(),
                 'manager_id' => filled(Arr::get($data, 'manager_id')) ? (int) Arr::get($data, 'manager_id') : null,
             ]);
@@ -246,7 +246,7 @@ class UserService
         }
 
         return Employee::query()->create([
-            'branch_id' => (int) Arr::get($data, 'branch_id'),
+            'company_id' => (int) Arr::get($data, 'company_id'),
             'person_id' => $person->getKey(),
             'manager_id' => filled(Arr::get($data, 'manager_id')) ? (int) Arr::get($data, 'manager_id') : null,
         ]);

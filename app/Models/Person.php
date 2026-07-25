@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\LogsModelActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -24,7 +25,9 @@ class Person extends Model implements HasMedia
         'nationality',
         'national_id',
         'phone',
+        'mobile',
         'email',
+        'blood_group',
         'address_id',
     ];
 
@@ -35,6 +38,15 @@ class Person extends Model implements HasMedia
     public function address(): BelongsTo
     {
         return $this->belongsTo(Address::class);
+    }
+
+    /**
+     * Multiple addresses on file (current, permanent, ...) — distinct from
+     * the single legacy `address()` (address_id) relation above.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(PersonAddress::class);
     }
 
     public function getFullNameAttribute(): string
