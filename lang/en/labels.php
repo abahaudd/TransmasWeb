@@ -48,6 +48,7 @@ return [
             'cms' => 'CMS',
             'customer_management' => 'Customer Management',
             'hr_management' => 'HR Management',
+            'service_catalog' => 'Service Catalog',
             'control_panel' => 'Control Panel',
             'administration' => 'Administration',
         ],
@@ -62,6 +63,11 @@ return [
         'employment_types' => 'Employment Types',
         'employment_statuses' => 'Employment Statuses',
         'sequence_number_formats' => 'Sequence Number Formats',
+        'service_categories' => 'Service Categories',
+        'services' => 'Services',
+        'service_components' => 'Service Components',
+        'tasks' => 'Tasks',
+        'government_departments' => 'Government Departments',
         'countries' => 'Countries',
         'roles' => 'Roles',
         'permissions' => 'Permissions',
@@ -73,6 +79,7 @@ return [
         'site_settings' => 'Site Settings',
         'company_settings' => 'Company Settings',
         'formatting_settings' => 'Formatting Settings',
+        'theme_settings' => 'Theme Settings',
     ],
 
     /*
@@ -305,6 +312,52 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Service catalog
+    |--------------------------------------------------------------------------
+    */
+
+    'service_category' => [
+        'description' => 'Description',
+    ],
+
+    'service' => [
+        'section_details' => 'Service Details',
+        'section_workflow' => 'Workflow',
+        'workflow_description' => 'The ordered steps this service runs. Drag to reorder — order becomes the run sequence. A step can be a single task or a whole task group.',
+        'category' => 'Category',
+        'description' => 'Description',
+        'cost' => 'Cost',
+        'price' => 'Price',
+        'add_step' => 'Add step',
+        'step_type' => 'Step Type',
+        'step' => 'Task / Task Group',
+        'workflow_cost_estimate' => 'Workflow Cost Estimate',
+        'workflow_cost_estimate_helper' => 'Sum of the resolved workflow\'s task costs — for comparison against the cost above, not a replacement for it.',
+        'resolved_tasks' => 'Resolved Tasks',
+    ],
+
+    'service_component' => [
+        'description' => 'Description',
+        'total_cost' => 'Total Cost',
+    ],
+
+    'task' => [
+        'service_component' => 'Service Component',
+        'service_component_helper' => 'Leave empty for a standalone task not organized into a service component.',
+        'description' => 'Description',
+        'cost' => 'Cost',
+        'government_department' => 'Government Department',
+        'government_department_helper' => 'The external department this task depends on, if any.',
+        'sequence' => 'Sequence',
+        'sequence_helper' => 'Position within its task group, when the group runs as a bundle.',
+    ],
+
+    'government_department' => [
+        'remarks' => 'Remarks',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Settings pages
     |--------------------------------------------------------------------------
     */
@@ -350,6 +403,25 @@ return [
             'section_date' => 'Date',
             'section_date_description' => 'Controls how dates are displayed app-wide via the Format helper.',
             'date_format' => 'Date format',
+        ],
+        'theme' => [
+            'section_palette' => 'Panel Color Palette',
+            'section_palette_description' => 'Controls the admin panel\'s color scheme app-wide — nothing here is hardcoded in the codebase.',
+            'primary_color' => 'Primary',
+            'gray_color' => 'Gray',
+            'gray_color_helper' => 'Neutral tone used for borders and muted text.',
+            'success_color' => 'Success',
+            'warning_color' => 'Warning',
+            'danger_color' => 'Danger',
+            'info_color' => 'Info',
+            'section_layout' => 'Layout Surfaces',
+            'section_layout_description' => 'Exact background colors for the main layout surfaces, each independently controllable.',
+            'page_background_color' => 'Page Background',
+            'page_background_color_helper' => 'The body background, behind the menu and cards.',
+            'menu_background_color' => 'Menu Background',
+            'menu_background_color_helper' => 'The sidebar/navigation background.',
+            'card_background_color' => 'Card Background',
+            'card_background_color_helper' => 'Sections, tables, and stat widgets.',
         ],
     ],
 

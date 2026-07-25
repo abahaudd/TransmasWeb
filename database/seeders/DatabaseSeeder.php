@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
             EmploymentLookupSeeder::class,
             SequenceNumberFormatSeeder::class,
             FormattingSettingsSeeder::class,
+            ThemeSettingsSeeder::class,
+            ServiceCatalogSeeder::class,
+            TaskCatalogSeeder::class,
+            ServiceWorkflowSeeder::class,
         ]);
     }
 }

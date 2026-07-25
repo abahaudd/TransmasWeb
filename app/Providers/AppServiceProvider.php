@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\ServiceComponent;
+use App\Models\Task;
 use App\Services\FormatService;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Health\Checks\Checks\CacheCheck;
@@ -40,6 +43,14 @@ class AppServiceProvider extends ServiceProvider
         app(PermissionRegistrar::class)
             ->setPermissionClass(Permission::class)
             ->setRoleClass(Role::class);
+
+        // Short, stable morph aliases for the service catalog's polymorphic
+        // workflow steps (service_workflow_steps.step_type), so renaming
+        // either model's namespace later doesn't orphan existing rows.
+        Relation::morphMap([
+            'task' => Task::class,
+            'service_component' => ServiceComponent::class,
+        ]);
 
         $this->registerHealthChecks();
     }
