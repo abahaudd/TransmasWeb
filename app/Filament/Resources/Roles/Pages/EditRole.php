@@ -14,7 +14,7 @@ class EditRole extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
+            ViewAction::make()->iconButton(),
             DeleteAction::make(),
         ];
     }

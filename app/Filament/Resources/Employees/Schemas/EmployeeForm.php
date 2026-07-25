@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Models\EmploymentStatus;
 use App\Models\EmploymentType;
 use App\Models\PersonAddress;
+use App\Models\Setting;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
@@ -22,11 +23,68 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Cache;
 
 class EmployeeForm
 {
     public static function configure(Schema $schema): Schema
     {
+        // Address field labels are admin-configurable (settings table, group
+        // "location"), not hardcoded — intentionally not run through __().
+        $locationHeadings = Cache::remember('location_headings', 3600, function () {
+            try {
+                return Setting::where('group', 'location')->where('name', 'headings')->first()?->payload ?? [];
+            } catch (\Exception $e) {
+                return [];
+            }
+        });
+
+        $addressFields = [
+            Select::make('address_type')
+                ->label(__('labels.type'))
+                ->options(PersonAddress::typeOptions())
+                ->default(PersonAddress::TYPE_CURRENT)
+                ->required()
+                ->native(false),
+            Toggle::make('is_primary')
+                ->label(__('labels.primary')),
+        ];
+
+        if (isset($locationHeadings['address'])) {
+            $addressFields[] = TextInput::make('address')
+                ->label($locationHeadings['address'])
+                ->required()
+                ->maxLength(255)
+                ->columnSpanFull();
+        }
+        if (isset($locationHeadings['location'])) {
+            $addressFields[] = TextInput::make('location')
+                ->label($locationHeadings['location'])
+                ->maxLength(255);
+        }
+        if (isset($locationHeadings['territory'])) {
+            $addressFields[] = TextInput::make('territory')
+                ->label($locationHeadings['territory'])
+                ->maxLength(255);
+        }
+        if (isset($locationHeadings['postal_code'])) {
+            $addressFields[] = TextInput::make('postal_code')
+                ->label($locationHeadings['postal_code'])
+                ->maxLength(50);
+        }
+        if (isset($locationHeadings['country']) || isset($locationHeadings['country_id'])) {
+            $addressFields[] = Select::make('country_id')
+                ->label($locationHeadings['country'] ?? $locationHeadings['country_id'])
+                ->options(fn () => Country::query()->orderBy('name')->pluck('name', 'id')->all())
+                ->searchable()
+                ->preload();
+        }
+
+        $addressFields[] = TextInput::make('remarks')
+            ->label(__('labels.remarks'))
+            ->maxLength(255)
+            ->columnSpanFull();
+
         return $schema
             ->components([
                 Section::make(__('labels.employee.section_personal_details'))
@@ -139,7 +197,27 @@ class EmployeeForm
                                     ->label(__('labels.employee.linked_user_account'))
                                     ->options(fn () => User::query()->orderBy('username')->pluck('username', 'id')->all())
                                     ->searchable()
-                                    ->preload(),
+                                    ->preload()
+                                    ->createOptionForm([
+                                        TextInput::make('username')
+                                            ->label(__('labels.username'))
+                                            ->required()
+                                            ->unique(table: 'users'),
+                                        TextInput::make('email')
+                                            ->label(__('labels.email_address'))
+                                            ->email()
+                                            ->required()
+                                            ->unique(table: 'users'),
+                                        TextInput::make('password')
+                                            ->label(__('labels.password'))
+                                            ->password()
+                                            ->revealable()
+                                            ->required()
+                                            ->minLength(8),
+                                    ])
+                                    ->createOptionUsing(function (array $data): int|string {
+                                        return User::create($data)->getKey();
+                                    }),
                                 Toggle::make('is_manager')
                                     ->label(__('labels.employee.is_manager'))
                                     ->default(false),
@@ -152,8 +230,9 @@ class EmployeeForm
                                     ->label(__('labels.employee.confirmation_date'))
                                     ->native(false),
                                 DatePicker::make('end_date')
-                                    ->label(__('labels.end_date'))
-                                    ->native(false),
+                                    ->label(__('labels.employee.release_date'))
+                                    ->native(false)
+                                    ->visible(fn (string $operation): bool => $operation === 'edit'),
                                 TextInput::make('termination_reason')
                                     ->label(__('labels.employee.termination_reason'))
                                     ->maxLength(100)
@@ -173,39 +252,7 @@ class EmployeeForm
                             ->schema([
                                 Hidden::make('id'),
                                 Grid::make(2)
-                                    ->schema([
-                                        Select::make('address_type')
-                                            ->label(__('labels.type'))
-                                            ->options(PersonAddress::typeOptions())
-                                            ->default(PersonAddress::TYPE_CURRENT)
-                                            ->required()
-                                            ->native(false),
-                                        Toggle::make('is_primary')
-                                            ->label(__('labels.primary')),
-                                        TextInput::make('address')
-                                            ->label(__('labels.address'))
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->columnSpanFull(),
-                                        TextInput::make('location')
-                                            ->label(__('labels.employee.city_location'))
-                                            ->maxLength(255),
-                                        TextInput::make('territory')
-                                            ->label(__('labels.employee.state_territory'))
-                                            ->maxLength(255),
-                                        TextInput::make('postal_code')
-                                            ->label(__('labels.employee.postal_code'))
-                                            ->maxLength(50),
-                                        Select::make('country_id')
-                                            ->label(__('labels.country'))
-                                            ->options(fn () => Country::query()->orderBy('name')->pluck('name', 'id')->all())
-                                            ->searchable()
-                                            ->preload(),
-                                        TextInput::make('remarks')
-                                            ->label(__('labels.remarks'))
-                                            ->maxLength(255)
-                                            ->columnSpanFull(),
-                                    ]),
+                                    ->schema($addressFields),
                             ])
                             ->itemLabel(fn (array $state): ?string => $state['address_type'] ?? null)
                             ->addActionLabel(__('labels.employee.add_address'))

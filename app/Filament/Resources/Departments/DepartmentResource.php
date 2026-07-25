@@ -28,13 +28,13 @@ class DepartmentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationGroup(): ?string
     {
-        return __('labels.nav.groups.hr_management');
+        return __('labels.nav.groups.control_panel');
     }
 
     public static function getNavigationLabel(): string

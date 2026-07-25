@@ -3,17 +3,64 @@
 namespace App\Filament\Resources\Employees\Schemas;
 
 use App\Models\Employee;
+use App\Models\Setting;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Cache;
 
 class EmployeeInfolist
 {
     public static function configure(Schema $schema): Schema
     {
+        // Address field labels are admin-configurable (settings table, group
+        // "location"), not hardcoded — intentionally not run through __().
+        $locationHeadings = Cache::remember('location_headings', 3600, function () {
+            try {
+                return Setting::where('group', 'location')->where('name', 'headings')->first()?->payload ?? [];
+            } catch (\Exception $e) {
+                return [];
+            }
+        });
+
+        $addressEntries = [
+            TextEntry::make('address_type')
+                ->label(__('labels.type'))
+                ->badge(),
+        ];
+
+        if (isset($locationHeadings['address'])) {
+            $addressEntries[] = TextEntry::make('address')
+                ->label($locationHeadings['address']);
+        }
+        if (isset($locationHeadings['location'])) {
+            $addressEntries[] = TextEntry::make('location')
+                ->label($locationHeadings['location'])
+                ->placeholder('-');
+        }
+        if (isset($locationHeadings['territory'])) {
+            $addressEntries[] = TextEntry::make('territory')
+                ->label($locationHeadings['territory'])
+                ->placeholder('-');
+        }
+        if (isset($locationHeadings['postal_code'])) {
+            $addressEntries[] = TextEntry::make('postal_code')
+                ->label($locationHeadings['postal_code'])
+                ->placeholder('-');
+        }
+        if (isset($locationHeadings['country']) || isset($locationHeadings['country_id'])) {
+            $addressEntries[] = TextEntry::make('country.name')
+                ->label($locationHeadings['country'] ?? $locationHeadings['country_id'])
+                ->placeholder('-');
+        }
+
+        $addressEntries[] = IconEntry::make('is_primary')
+            ->label(__('labels.primary'))
+            ->boolean();
+
         return $schema
             ->components([
                 Section::make(__('labels.employee.section_personal_details'))
@@ -76,7 +123,7 @@ class EmployeeInfolist
                                     ->date()
                                     ->placeholder('-'),
                                 TextEntry::make('end_date')
-                                    ->label(__('labels.end_date'))
+                                    ->label(__('labels.employee.release_date'))
                                     ->date()
                                     ->placeholder('-'),
                                 TextEntry::make('termination_reason')
@@ -93,28 +140,7 @@ class EmployeeInfolist
                     ->schema([
                         RepeatableEntry::make('person.addresses')
                             ->label('')
-                            ->schema([
-                                TextEntry::make('address_type')
-                                    ->label(__('labels.type'))
-                                    ->badge(),
-                                TextEntry::make('address')
-                                    ->label(__('labels.address')),
-                                TextEntry::make('location')
-                                    ->label(__('labels.employee.city_location'))
-                                    ->placeholder('-'),
-                                TextEntry::make('territory')
-                                    ->label(__('labels.employee.state_territory'))
-                                    ->placeholder('-'),
-                                TextEntry::make('postal_code')
-                                    ->label(__('labels.employee.postal_code'))
-                                    ->placeholder('-'),
-                                TextEntry::make('country.name')
-                                    ->label(__('labels.country'))
-                                    ->placeholder('-'),
-                                IconEntry::make('is_primary')
-                                    ->label(__('labels.primary'))
-                                    ->boolean(),
-                            ])
+                            ->schema($addressEntries)
                             ->columns(3),
                     ])
                     ->visible(fn (Employee $record): bool => $record->person?->addresses->isNotEmpty()),

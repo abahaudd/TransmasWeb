@@ -9,6 +9,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
 
 class ServiceInfolist
 {
@@ -52,16 +54,70 @@ class ServiceInfolist
                 Section::make(__('labels.service.section_workflow'))
                     ->schema([
                         RepeatableEntry::make('workflowSteps')
-                            ->label('')
+                            ->hiddenLabel()
                             ->schema([
-                                TextEntry::make('step_type')
-                                    ->label(__('labels.service.step_type'))
-                                    ->badge()
-                                    ->formatStateUsing(fn (string $state): string => ServiceWorkflowStep::typeOptions()[$state] ?? $state),
-                                TextEntry::make('step.name')
-                                    ->label(__('labels.service.step')),
-                            ])
-                            ->columns(2),
+                                Grid::make(4)
+                                    ->schema([
+                                        TextEntry::make('step.name')
+                                            ->hiddenLabel()
+                                            ->icon(fn (ServiceWorkflowStep $record) => match ($record->step_type) {
+                                                ServiceWorkflowStep::TYPE_TASK => Heroicon::OutlinedListBullet,
+                                                ServiceWorkflowStep::TYPE_SERVICE_COMPONENT => Heroicon::OutlinedRectangleStack,
+                                                default => null,
+                                            })
+                                            ->iconColor('primary')
+                                            ->weight(FontWeight::Medium)
+                                            ->html()
+                                            ->formatStateUsing(function (ServiceWorkflowStep $record, string $state): string {
+                                                $department = $record->step_type === ServiceWorkflowStep::TYPE_TASK
+                                                    ? $record->step?->governmentDepartment?->name
+                                                    : null;
+
+                                                $html = e($state);
+
+                                                if (filled($department)) {
+                                                    $html .= '<span class="block text-xs font-normal text-gray-400">' . e($department) . '</span>';
+                                                }
+
+                                                return $html;
+                                            })
+                                            ->columnSpan(3),
+                                        TextEntry::make('cost')
+                                            ->hiddenLabel()
+                                            ->state(fn (ServiceWorkflowStep $record): string => match ($record->step_type) {
+                                                ServiceWorkflowStep::TYPE_TASK => (string) ($record->step?->cost ?? 0),
+                                                ServiceWorkflowStep::TYPE_SERVICE_COMPONENT => $record->step?->totalCost() ?? '0',
+                                                default => '0',
+                                            })
+                                            ->formatStateUsing(fn (string $state): string => format_money($state))
+                                            ->alignEnd()
+                                            ->columnSpan(1),
+                                    ]),
+                                Section::make()
+                                    ->schema([
+                                        RepeatableEntry::make('step.tasks')
+                                            ->hiddenLabel()
+                                            ->schema([
+                                                Grid::make(4)
+                                                    ->schema([
+                                                        TextEntry::make('name')
+                                                            ->hiddenLabel()
+                                                            ->icon(Heroicon::OutlinedListBullet)
+                                                            ->iconColor('gray')
+                                                            ->columnSpan(3),
+                                                        TextEntry::make('cost')
+                                                            ->hiddenLabel()
+                                                            ->formatStateUsing(fn (string $state): string => format_money($state))
+                                                            ->alignEnd()
+                                                            ->columnSpan(1),
+                                                    ]),
+                                            ]),
+                                    ])
+                                    ->collapsible()
+                                    ->collapsed()
+                                    ->compact()
+                                    ->visible(fn (ServiceWorkflowStep $record): bool => $record->step_type === ServiceWorkflowStep::TYPE_SERVICE_COMPONENT),
+                            ]),
                     ])
                     ->visible(fn (Service $record): bool => $record->workflowSteps->isNotEmpty()),
             ]);
