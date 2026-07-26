@@ -54,6 +54,11 @@ class Service extends Model
         return $this->hasMany(ServiceWorkflowStep::class)->orderBy('sequence');
     }
 
+    public function serviceDocuments(): HasMany
+    {
+        return $this->hasMany(ServiceDocument::class)->orderBy('sequence');
+    }
+
     /**
      * The ordered, expanded list of tasks this service's workflow actually
      * runs — service-component steps are expanded into their member tasks

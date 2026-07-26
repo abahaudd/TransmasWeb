@@ -18,6 +18,7 @@ class ServiceCatalogService
     protected const RELATIONS = [
         'category',
         'workflowSteps.step',
+        'serviceDocuments.document',
     ];
 
     public function getAllServices(): Collection
@@ -39,17 +40,19 @@ class ServiceCatalogService
     }
 
     /**
-     * Create a Service together with its ordered workflow steps.
+     * Create a Service together with its ordered workflow steps and required documents.
      *
      * @param array<string, mixed> $data
      * @param array<int, array<string, mixed>> $workflowSteps Each item: ['id' => ?int, 'step_type' => 'task'|'service_component', 'step_id' => int]
+     * @param array<int, array<string, mixed>> $serviceDocuments Each item: ['id' => ?int, 'document_id' => int, 'is_mandatory' => bool, 'remarks' => ?string]
      */
-    public function createService(array $data, array $workflowSteps = []): Service
+    public function createService(array $data, array $workflowSteps = [], array $serviceDocuments = []): Service
     {
-        return DB::transaction(function () use ($data, $workflowSteps): Service {
-            $service = Service::create(Arr::except($data, ['workflow_steps']));
+        return DB::transaction(function () use ($data, $workflowSteps, $serviceDocuments): Service {
+            $service = Service::create(Arr::except($data, ['workflow_steps', 'service_documents']));
 
             $this->syncWorkflowSteps($service, $workflowSteps);
+            $this->syncServiceDocuments($service, $serviceDocuments);
 
             return $service->fresh(self::RELATIONS);
         });
@@ -58,14 +61,19 @@ class ServiceCatalogService
     /**
      * @param array<string, mixed> $data
      * @param array<int, array<string, mixed>>|null $workflowSteps Omit (null) to leave the workflow untouched.
+     * @param array<int, array<string, mixed>>|null $serviceDocuments Omit (null) to leave the required documents untouched.
      */
-    public function updateService(Service $service, array $data, ?array $workflowSteps = null): Service
+    public function updateService(Service $service, array $data, ?array $workflowSteps = null, ?array $serviceDocuments = null): Service
     {
-        return DB::transaction(function () use ($service, $data, $workflowSteps): Service {
-            $service->update(Arr::except($data, ['workflow_steps']));
+        return DB::transaction(function () use ($service, $data, $workflowSteps, $serviceDocuments): Service {
+            $service->update(Arr::except($data, ['workflow_steps', 'service_documents']));
 
             if ($workflowSteps !== null) {
                 $this->syncWorkflowSteps($service, $workflowSteps);
+            }
+
+            if ($serviceDocuments !== null) {
+                $this->syncServiceDocuments($service, $serviceDocuments);
             }
 
             return $service->fresh(self::RELATIONS);
@@ -109,6 +117,41 @@ class ServiceCatalogService
         }
 
         $service->workflowSteps()->whereNotIn('id', $keptIds)->delete();
+    }
+
+    /**
+     * Replace a service's required-documents list to match the submitted
+     * set. Existing rows are matched by 'id' (update mandatory flag/remarks);
+     * anything no longer present is removed.
+     *
+     * @param array<int, array<string, mixed>> $documents
+     */
+    public function syncServiceDocuments(Service $service, array $documents): void
+    {
+        $keptIds = [];
+
+        foreach (array_values($documents) as $index => $documentData) {
+            $id = $documentData['id'] ?? null;
+            $payload = [
+                'document_id' => (int) $documentData['document_id'],
+                'is_mandatory' => (bool) ($documentData['is_mandatory'] ?? true),
+                'remarks' => $documentData['remarks'] ?? null,
+                'sequence' => $index,
+            ];
+
+            $existing = $id ? $service->serviceDocuments()->whereKey($id)->first() : null;
+
+            if ($existing) {
+                $existing->update($payload);
+                $keptIds[] = $existing->getKey();
+
+                continue;
+            }
+
+            $keptIds[] = $service->serviceDocuments()->create($payload)->getKey();
+        }
+
+        $service->serviceDocuments()->whereNotIn('id', $keptIds)->delete();
     }
 
     /**

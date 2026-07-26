@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Company;
+use App\Models\Customer;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\ServiceComponent;
@@ -50,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'task' => Task::class,
             'service_component' => ServiceComponent::class,
+            'company' => Company::class,
+            'customer' => Customer::class,
         ]);
 
         $this->registerHealthChecks();

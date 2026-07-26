@@ -100,6 +100,11 @@ class Employee extends Model
         return $this->hasMany(self::class, 'reporting_to_id');
     }
 
+    public function employeeDocuments(): HasMany
+    {
+        return $this->hasMany(EmployeeDocument::class);
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

@@ -13,6 +13,7 @@
 
 namespace App\Filament\Resources\Customers;
 
+use App\Filament\Resources\Customers\RelationManagers\DocumentsRelationManager;
 use App\Filament\Resources\Customers\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\Customers\Pages\CreateCustomer;
 use App\Filament\Resources\Customers\Pages\EditCustomer;
@@ -164,6 +165,7 @@ class CustomerResource extends Resource
     {
         return [
             UsersRelationManager::class,
+            DocumentsRelationManager::class,
         ];
     }
 

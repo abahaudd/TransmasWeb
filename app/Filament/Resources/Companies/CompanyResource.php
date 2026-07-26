@@ -16,6 +16,7 @@ use App\Filament\Resources\Companies\Pages\CreateCompany;
 use App\Filament\Resources\Companies\Pages\EditCompany;
 use App\Filament\Resources\Companies\Pages\ListCompanies;
 use App\Filament\Resources\Companies\Pages\ViewCompany;
+use App\Filament\Resources\Companies\RelationManagers\DocumentsRelationManager;
 use App\Filament\Resources\Companies\RelationManagers\GovernmentRegistrationsRelationManager;
 use App\Filament\Resources\Companies\RelationManagers\PhonesRelationManager;
 use App\Filament\Resources\Companies\Schemas\CompanyForm;
@@ -68,6 +69,7 @@ class CompanyResource extends Resource
         return [
             PhonesRelationManager::class,
             GovernmentRegistrationsRelationManager::class,
+            DocumentsRelationManager::class,
         ];
     }
 

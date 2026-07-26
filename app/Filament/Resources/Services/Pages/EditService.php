@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Services\Pages;
 
 use App\Filament\Resources\Services\ServiceResource;
 use App\Models\Service;
+use App\Models\ServiceDocument;
 use App\Models\ServiceWorkflowStep;
 use App\Services\ServiceCatalogService;
 use Filament\Actions\DeleteAction;
@@ -38,12 +39,27 @@ class EditService extends EditRecord
             ])
             ->all();
 
+        $data['service_documents'] = $service->serviceDocuments()
+            ->get()
+            ->map(fn (ServiceDocument $document): array => [
+                'id' => $document->id,
+                'document_id' => $document->document_id,
+                'is_mandatory' => $document->is_mandatory,
+                'remarks' => $document->remarks,
+            ])
+            ->all();
+
         return $data;
     }
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         /** @var Service $record */
-        return app(ServiceCatalogService::class)->updateService($record, $data, $data['workflow_steps'] ?? []);
+        return app(ServiceCatalogService::class)->updateService(
+            $record,
+            $data,
+            $data['workflow_steps'] ?? [],
+            $data['service_documents'] ?? [],
+        );
     }
 }

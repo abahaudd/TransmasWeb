@@ -15,6 +15,10 @@ class CreateService extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         /** @var Service */
-        return app(ServiceCatalogService::class)->createService($data, $data['workflow_steps'] ?? []);
+        return app(ServiceCatalogService::class)->createService(
+            $data,
+            $data['workflow_steps'] ?? [],
+            $data['service_documents'] ?? [],
+        );
     }
 }

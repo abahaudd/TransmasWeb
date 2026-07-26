@@ -27,6 +27,11 @@ return [
     'notes' => 'Notes',
     'active' => 'Active',
     'primary' => 'Primary',
+    'document_type' => 'Document Type',
+    'document_number' => 'Document Number',
+    'issue_date' => 'Issue Date',
+    'expiry_date' => 'Expiry Date',
+    'attachment' => 'Attachment',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
     'username' => 'Username',
@@ -66,6 +71,7 @@ return [
         'service_categories' => 'Service Categories',
         'services' => 'Services',
         'service_components' => 'Service Components',
+        'documents' => 'Documents',
         'tasks' => 'Tasks',
         'government_departments' => 'Government Departments',
         'countries' => 'Countries',
@@ -335,11 +341,21 @@ return [
         'workflow_cost_estimate' => 'Workflow Cost Estimate',
         'workflow_cost_estimate_helper' => 'Sum of the resolved workflow\'s task costs — for comparison against the cost above, not a replacement for it.',
         'resolved_tasks' => 'Resolved Tasks',
+        'section_documents' => 'Required Documents',
+        'documents_description' => 'Documents a customer must provide for this service. Toggle "Mandatory" off for optional/supporting documents.',
+        'add_document' => 'Add document',
+        'is_mandatory' => 'Mandatory',
     ],
 
     'service_component' => [
         'description' => 'Description',
         'total_cost' => 'Total Cost',
+    ],
+
+    'document' => [
+        'group' => 'Group',
+        'issuing_authority' => 'Issuing Authority',
+        'description' => 'Description',
     ],
 
     'task' => [

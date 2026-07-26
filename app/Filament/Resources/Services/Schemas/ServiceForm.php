@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Services\Schemas;
 
+use App\Models\Document;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\ServiceComponent;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -204,6 +206,63 @@ class ServiceForm
                             ->afterStateUpdated(function (Set $set, ?array $state): void {
                                 $set('cost', self::calculateWorkflowCost($state ?? []));
                             })
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make(__('labels.service.section_documents'))
+                    ->description(__('labels.service.documents_description'))
+                    ->collapsible()
+                    ->schema([
+                        Repeater::make('service_documents')
+                            ->label('')
+                            ->schema([
+                                Hidden::make('id'),
+                                Grid::make(3)
+                                    ->schema([
+                                        Select::make('document_id')
+                                            ->label(__('labels.document_type'))
+                                            ->options(fn () => Document::query()->orderBy('name')->pluck('name', 'id')->all())
+                                            ->searchable()
+                                            ->preload()
+                                            ->required()
+                                            ->createOptionForm([
+                                                TextInput::make('name')
+                                                    ->label(__('labels.name'))
+                                                    ->required()
+                                                    ->maxLength(200),
+                                                Select::make('group')
+                                                    ->label(__('labels.document.group'))
+                                                    ->options(Document::groupOptions())
+                                                    ->native(false),
+                                                TextInput::make('issuing_authority')
+                                                    ->label(__('labels.document.issuing_authority'))
+                                                    ->maxLength(150),
+                                            ])
+                                            ->createOptionUsing(function (array $data): int|string {
+                                                return Document::create([
+                                                    'name' => $data['name'],
+                                                    'group' => $data['group'] ?? null,
+                                                    'issuing_authority' => $data['issuing_authority'] ?? null,
+                                                    'is_active' => true,
+                                                ])->getKey();
+                                            })
+                                            ->columnSpan(2),
+                                        Toggle::make('is_mandatory')
+                                            ->label(__('labels.service.is_mandatory'))
+                                            ->default(true),
+                                    ]),
+                                TextInput::make('remarks')
+                                    ->label(__('labels.remarks'))
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => filled($state['document_id'] ?? null)
+                                ? Document::find($state['document_id'])?->name
+                                : null)
+                            ->addActionLabel(__('labels.service.add_document'))
+                            ->reorderable()
+                            ->collapsible()
+                            ->defaultItems(0)
                             ->columnSpanFull(),
                     ]),
             ]);
