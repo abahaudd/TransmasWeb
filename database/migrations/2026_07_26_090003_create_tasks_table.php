@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('task_group_id')
+            $table->foreignId('service_component_id')
                 ->nullable()
-                ->constrained('task_groups')
+                ->constrained('service_components')
                 ->nullOnDelete();
 
             $table->string('name', 200);
@@ -29,14 +29,14 @@ return new class extends Migration
                 ->constrained('government_departments')
                 ->nullOnDelete();
 
-            // Position within its task_group when the group runs as a bundle.
+            // Position within its service component when it runs as a bundle.
             $table->unsignedInteger('sequence')->default(0);
 
             $table->boolean('is_active')->default(true);
 
             $table->timestamps();
 
-            $table->index('task_group_id');
+            $table->index('service_component_id');
             $table->index('is_active');
         });
     }
